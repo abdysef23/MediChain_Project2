@@ -44,7 +44,7 @@
             <!-- This records list is styled the same for both views -->
             <div class="records-list">
                 {% for record in records %}
-                <a href="{{ record.file_url }}" target="_blank" class="record-item">
+                <a href="{{ url_for('record_detail', record_id=record.id) }}" class="record-item">
                     <div class="record-icon">📄</div>
                     <div class="record-info">
                         <strong>{{ record.file_name }}</strong>

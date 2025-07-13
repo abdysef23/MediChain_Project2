@@ -95,7 +95,30 @@ def logout():
     session.clear() # Removes all data from the session
     return redirect(url_for('index'))
 
+@app.route('/record/<record_id>')
+def record_detail(record_id):
+    """Displays the details for a single medical record."""
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
 
+    user_id = session['user_id']
+    
+    try:
+        # Fetch the specific record from the database
+        record_response = supabase.table('files').select('*').eq('id', record_id).single().execute()
+        record = record_response.data
+
+        # Security Check: Make sure the record belongs to the logged-in user
+        if not record or record['user_id'] != user_id:
+            return "Error: Record not found or you do not have permission to view it.", 404
+            
+        # Determine the file type for the icon
+        file_type = 'image' if record['file_name'].lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) else 'pdf'
+
+        return render_template('record_detail.html', record=record, file_type=file_type)
+
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500
 # REPLACE THE OLD DASHBOARD FUNCTION WITH THIS ENTIRE BLOCK
 
 @app.route('/dashboard')
