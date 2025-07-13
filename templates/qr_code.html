@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Share Your Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="qr-container">
+        <h3>Share your records</h3>
+        <p>Show this to a doctor to grant them access.</p>
+        <div id="qrcode-frame">
+            <div id="qrcode"></div>
+        </div>
+        <div class="qr-actions">
+            <button class="btn btn-secondary">Refresh QR</button>
+            <!-- Added id="copyLinkBtn" to target the button with JavaScript -->
+            <button class="btn btn-primary" id="copyLinkBtn">Copy Link</button>
+        </div>
+    </div>
+
+    <script>
+        // --- This part generates the QR code (no changes here) ---
+        const qrCodeUrl = "{{ qr_code_url }}";
+        new QRCode(document.getElementById("qrcode"), {
+            text: qrCodeUrl,
+            width: 200,
+            height: 200
+        });
+
+        // --- NEW: This script adds the copy functionality ---
+        const copyBtn = document.getElementById('copyLinkBtn');
+
+        copyBtn.addEventListener('click', () => {
+            // Use the modern navigator.clipboard API
+            navigator.clipboard.writeText(qrCodeUrl).then(() => {
+                // Provide feedback to the user
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                
+                // Change the text back after 2 seconds
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy the link.');
+            });
+        });
+    </script>
+</body>
+</html>

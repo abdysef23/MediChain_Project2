@@ -1,0 +1,382 @@
+/* static/css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+
+:root {
+    --primary-blue: #0d6efd;
+    --light-blue: #e7f1ff;
+    --dark-blue: #0a58ca;
+    --white: #ffffff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-500: #adb5bd;
+    --gray-700: #495057;
+    --gray-900: #212529;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --font-family: 'Manrope', sans-serif;
+}
+
+/* --- General & Reset --- */
+body {
+    font-family: var(--font-family);
+    background-color: var(--gray-100);
+    color: var(--gray-900);
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-blue);
+}
+
+/* --- Login & Sign Up Page (index.html) --- */
+.auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.auth-header {
+    width: 100%;
+    max-width: 450px;
+    padding-bottom: 2rem;
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.auth-container {
+    background: var(--white);
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.auth-tabs .tab-link {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    position: relative;
+}
+
+.auth-tabs .tab-link.active {
+    color: var(--primary-blue);
+    border-bottom: 3px solid var(--primary-blue);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family); /* Ensures the font is consistent */
+    box-sizing: border-box; /* Prevents padding from breaking layout */
+    resize: vertical; /* Allows users to resize the box, but only up and down */
+    min-height: 50px; /* Sets a minimum height */
+}
+
+/* This rule now includes 'textarea' for the blue glow on focus */
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px var(--light-blue);
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-blue);
+}
+
+/* --- Layout (Dashboard, Records) --- */
+.layout-wrapper {
+    display: flex;
+}
+
+.sidebar {
+    width: 260px;
+    background: var(--white);
+    height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    box-sizing: border-box;
+}
+
+.sidebar-header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+}
+
+.sidebar nav a {
+    display: block;
+    color: var(--gray-700);
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.sidebar nav a:hover {
+    background-color: var(--gray-100);
+}
+
+.sidebar nav a.active {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.main-header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* --- Dashboard Page (dashboard.html) --- */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+}
+
+.card p {
+    color: var(--gray-700);
+    font-size: 0.9rem;
+}
+
+/* --- Records Page (records.html) --- */
+.records-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* This is the new rule that fixes the button size */
+.records-header .btn {
+    width: auto; /* Overrides the default 100% width */
+    padding: 0.8rem 1.5rem; /* Adjust padding for a better look */
+}
+
+.records-list {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.record-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-item:hover {
+    background-color: var(--gray-100);
+}
+
+.record-icon {
+    font-size: 1.5rem;
+    margin-right: 1.5rem;
+    color: var(--primary-blue);
+}
+
+.record-info {
+    flex-grow: 1;
+}
+
+.record-info strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.record-info span {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+}
+
+.record-date {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+/* --- Upload Page (upload_records.html) --- */
+.upload-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: var(--white);
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.upload-box {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    background-color: var(--gray-100);
+    margin-bottom: 1.5rem;
+}
+
+.upload-box p {
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+.btn-secondary {
+    background-color: var(--gray-200);
+    color: var(--gray-900);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #dcdfe2;
+}
+
+
+/* --- QR Code Page (qr_code.html) --- */
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    max-width: 400px;
+    margin: 3rem auto;
+}
+#qrcode-frame {
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+.qr-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+/* ADD THIS ENTIRE BLOCK TO THE END OF YOUR CSS FILE */
+
+/* Make sidebar nav take available space for footer positioning */
+.sidebar nav {
+    flex-grow: 1;
+}
+
+/* Container for the logout button */
+.sidebar-footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+    padding-top: 1rem; 
+}
+
+/* Styling for the logout button itself */
+.logout-btn {
+    display: block;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #d8e6fa; /* A slightly darker shade for hover */
+    color: var(--dark-blue);
+}
+
+/* END OF NEW CSS BLOCK */

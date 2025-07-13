@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MediChain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+    <header class="sidebar-header">MediChain</header>
+    <nav>
+        <a href="{{ url_for('dashboard') }}" class="active">Home</a>
+        <a href="{{ url_for('records') }}">Records</a>
+        <a href="#">Appointments</a>
+        <a href="#">Messages</a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Hi, {{ user.name }}</h1>
+            </header>
+            <section>
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="quick-actions">
+                    <a href="{{ url_for('records') }}" class="card">
+                        <h3>View Records</h3>
+                        <p>Access your complete medical history.</p>
+                    </a>
+                    <a href="{{ url_for('qr_code') }}" class="card">
+                        <h3>Share with Doctors</h3>
+                        <p>See who has access to your records.</p>
+                    </a>
+                    <div class="card">
+                        <h3>Appointments</h3>
+                        <p>Manage and schedule your appointments.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
