@@ -23,10 +23,14 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
         body: JSON.stringify(data)
     });
 
+    // This part is new: it reads the JSON response from the backend
+    const result = await response.json();
+
     if (response.ok) {
-        window.location.href = '/dashboard';
+        // Redirect to the URL provided by the backend
+        window.location.href = result.redirect_url;
     } else {
-        alert('Login failed!');
+        alert(result.message || 'Login failed!');
     }
 });
 

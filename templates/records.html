@@ -9,12 +9,14 @@
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
-             <header class="sidebar-header">MediChain</header>
+            <header class="sidebar-header">MediChain</header>
             <nav>
-                <!-- The sidebar is different for a doctor vs a patient -->
-                {% if doctor_view %}
-                <a href="#" class="active">Patient Records</a>
-                {% else %}
+                    {# If a doctor is logged in and viewing, show this #}
+                    {% if doctor_view and session.user_id %}
+                    <a href="#" class="active">Patient Records</a>
+                    {# If a patient is logged in and viewing their own records #}
+                    {% elif not doctor_view and session.user_id %}
+
                 <a href="{{ url_for('dashboard') }}">Home</a>
                 <a href="{{ url_for('records') }}" class="active">Records</a>
                 <a href="#">Appointments</a>
@@ -22,7 +24,6 @@
                 {% endif %}
             </nav>
             
-            <!-- The logout button only shows for logged-in patients -->
             {% if not doctor_view %}
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
@@ -32,18 +33,19 @@
 
         <main class="main-content">
             <header class="records-header">
-                <!-- The title changes based on who is viewing -->
                 <h1>{{ 'Records for: ' + user.name if doctor_view else 'My Health Records' }}</h1>
                 
-                <!-- The upload button ONLY appears for doctors -->
                 {% if doctor_view %}
                 <a href="{{ url_for('upload_page', patient_id=patient_id) }}" class="btn btn-primary">Upload New Record</a>
                 {% endif %}
             </header>
 
-            <!-- This records list is styled the same for both views -->
             <div class="records-list">
                 {% for record in records %}
+                <!-- 
+                  THIS IS THE FIX: The link now ALWAYS goes to the record_detail page.
+                  The target="_blank" is also removed for consistency.
+                -->
                 <a href="{{ url_for('record_detail', record_id=record.id) }}" class="record-item">
                     <div class="record-icon">📄</div>
                     <div class="record-info">
@@ -53,7 +55,7 @@
                     <div class="record-date">{{ record.uploaded_at.split('T')[0] }}</div>
                 </a>
                 {% else %}
-                <div class="record-item" style="display: block; text-align: center; padding: 2rem;">
+                <div class="record-item" style="justify-content: center;">
                     <p>No records found for this patient.</p>
                 </div>
                 {% endfor %}
