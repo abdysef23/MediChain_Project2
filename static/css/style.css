@@ -1085,3 +1085,37 @@ a {
     height: 80px;
     margin: 0;
 }
+/* --- NEW: Centered Content Container & Refined Search --- */
+
+/* This is the new main container for the drug guide page */
+.guide-container {
+    width: 100%;
+    max-width: 900px; /* Prevents content from being too wide */
+    margin: 0 auto;    /* Centers the container horizontally */
+    padding-top: 1rem; /* Adds some space at the top */
+}
+
+/* We'll adjust the main header inside this new container */
+.guide-container .main-header {
+    border-bottom: none; /* Remove the full-width border */
+    text-align: center;  /* Center the "Drug Guide" title */
+    margin-bottom: 1.5rem;
+}
+
+/* Refined style for the search input wrapper */
+.guide-container .search-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* A slightly more polished search input field */
+.guide-container .search-form input[type="search"] {
+    padding: 1rem 1.5rem 1rem 3.5rem;
+    font-size: 1.1rem; /* Make the text slightly larger */
+    border-radius: 10px;
+}
+
+/* Hides the now-redundant search button for a cleaner, more modern look */
+.guide-container .search-form button {
+    display: none;
+}

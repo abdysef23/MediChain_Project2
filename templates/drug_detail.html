@@ -24,7 +24,7 @@
         <!-- THIS IS THE FULL, CORRECT MAIN CONTENT AREA -->
         <main class="main-content">
             <div class="drug-detail-header">
-                <img src="{{ drug.image_url or 'https://via.placeholder.com/100' }}" alt="{{ drug.trade_name }}">
+                <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/100' }}" alt="{{ drug.trade_name }}"  width="20" height="20">
                 <div>
                     <h1>{{ drug.trade_name }}</h1>
                     <h2>{{ drug.scientific_name }}</h2>

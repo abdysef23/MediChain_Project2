@@ -1,5 +1,3 @@
-<!-- REPLACE THE ENTIRE CONTENT OF templates/drug_guide.html WITH THIS BLOCK -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +8,6 @@
 </head>
 <body>
     <div class="layout-wrapper">
-        <!-- The Full Sidebar -->
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
@@ -24,12 +21,12 @@
         </aside>
 
         <main class="main-content">
-            <header class="main-header">
-                <h1>Drug Guide</h1>
-            </header>
+            <div class="guide-container">
             
-            <!-- THIS IS THE RESTORED SEARCH BAR SECTION -->
-            <div class="search-container">
+                <header class="main-header">
+                    <h1>Drug Guide</h1>
+                </header>
+                
                 <form method="GET" action="{{ url_for('drug_guide') }}" class="search-form">
                     <div class="search-wrapper">
                         <i class="search-icon" data-feather="search"></i>
@@ -37,39 +34,35 @@
                         <button type="submit" style="display: none;">Search</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- This is the List/Grid View Switcher -->
-            <div class="view-switcher">
-                <button id="list-view-btn" class="view-btn active"><i data-feather="list"></i></button>
-                <button id="grid-view-btn" class="view-btn"><i data-feather="grid"></i></button>
-            </div>
-
-            <!-- This is the Drug List display -->
-            <div class="drug-list" id="drug-list-container">
-                {% for drug in drugs %}
-                <a href="{{ url_for('drug_detail', drug_id=drug.id) }}" class="drug-item">
-                    <img src="{{ drug.image_url or 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
-                    <div class="drug-info">
-                        <strong>{{ drug.trade_name }}</strong>
-                        <span>{{ drug.scientific_name }}</span>
-                    </div>
-                </a>
-                {% else %}
-                <div class="no-drugs-found">
-                    <p>No drugs found matching your search.</p>
+    
+                <div class="view-switcher">
+                    <button id="list-view-btn" class="view-btn active"><i data-feather="list"></i></button>
+                    <button id="grid-view-btn" class="view-btn"><i data-feather="grid"></i></button>
                 </div>
-                {% endfor %}
+    
+                <div class="drug-list" id="drug-list-container">
+                    {% for drug in drugs %}
+                    <a href="{{ url_for('drug_detail', drug_id=drug.id) }}" class="drug-item">
+                        <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
+                        <div class="drug-info">
+                            <strong>{{ drug.trade_name }}</strong>
+                            <span>{{ drug.scientific_name }}</span>
+                        </div>
+                    </a>
+                    {% else %}
+                    <div class="no-drugs-found">
+                        <p>No drugs found matching your search.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
             </div>
         </main>
     </div>
 
-    <!-- All necessary scripts -->
     <script>
         feather.replace()
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
-
-<!-- END OF REPLACEMENT BLOCK -->
