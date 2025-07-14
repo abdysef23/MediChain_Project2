@@ -11,19 +11,15 @@
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
-                    {# If a doctor is logged in and viewing, show this #}
-                    {% if doctor_view and session.user_id %}
-                    <a href="#" class="active">Patient Records</a>
-                    {# If a patient is logged in and viewing their own records #}
-                    {% elif not doctor_view and session.user_id %}
-
+                {% if doctor_view and session.user_id %}
+                <a href="#" class="active">Patient Records</a>
+                {% elif not doctor_view and session.user_id %}
                 <a href="{{ url_for('dashboard') }}">Home</a>
                 <a href="{{ url_for('records') }}" class="active">Records</a>
                 <a href="#">Appointments</a>
                 <a href="#">Messages</a>
                 {% endif %}
             </nav>
-            
             {% if not doctor_view %}
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
@@ -34,19 +30,31 @@
         <main class="main-content">
             <header class="records-header">
                 <h1>{{ 'Records for: ' + user.name if doctor_view else 'My Health Records' }}</h1>
-                
                 {% if doctor_view %}
                 <a href="{{ url_for('upload_page', patient_id=patient_id) }}" class="btn btn-primary">Upload New Record</a>
                 {% endif %}
             </header>
 
+            <!-- NEW: Filter Navigation Bar -->
+            <div class="filter-nav">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="Visit Summary">Visits</button>
+                <button class="filter-btn" data-filter="Lab Results">Labs</button>
+                <button class="filter-btn" data-filter="Vaccination">Vaccines</button>
+                <button class="filter-btn" data-filter="Imaging">Imaging</button>
+            </div>
+            <!-- END OF NEW SECTION -->
+
             <div class="records-list">
                 {% for record in records %}
                 <!-- 
-                  THIS IS THE FIX: The link now ALWAYS goes to the record_detail page.
-                  The target="_blank" is also removed for consistency.
+                  IMPORTANT: Added two things here:
+                  1. A new class 'record-item-filterable' for the JavaScript to find.
+                  2. A 'data-classification' attribute to hold the record's type.
                 -->
-                <a href="{{ url_for('record_detail', record_id=record.id) }}" class="record-item">
+                <a href="{{ url_for('record_detail', record_id=record.id) }}" 
+                   class="record-item record-item-filterable" 
+                   data-classification="{{ record.classification }}">
                     <div class="record-icon">📄</div>
                     <div class="record-info">
                         <strong>{{ record.file_name }}</strong>
@@ -62,5 +70,7 @@
             </div>
         </main>
     </div>
+    <!-- We will add the JavaScript link here in the next step -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

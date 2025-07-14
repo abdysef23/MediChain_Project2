@@ -71,3 +71,36 @@ document.getElementById('uploadForm')?.addEventListener('submit', async function
         alert('Upload failed!');
     }
 });
+// --- Record Filtering Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Find the filter buttons and record items on the page
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const recordItems = document.querySelectorAll('.record-item-filterable');
+
+    // If there are no filter buttons on this page, do nothing.
+    if (filterButtons.length === 0) {
+        return;
+    }
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Get the category to filter by from the button's data-filter attribute
+            const filterValue = button.dataset.filter;
+
+            // Update the active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Show or hide record items based on the filter
+            recordItems.forEach(item => {
+                const itemClassification = item.dataset.classification;
+
+                if (filterValue === 'all' || itemClassification === filterValue) {
+                    item.style.display = 'flex'; // Show the item
+                } else {
+                    item.style.display = 'none'; // Hide the item
+                }
+            });
+        });
+    });
+});

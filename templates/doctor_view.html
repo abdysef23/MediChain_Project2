@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Viewing Records for: {{ patient.name }}</h2>
+        <div class="records-list">
+            {% for record in records %}
+            <div class="record-item">
+                <p><strong>{{ record.file_name }}</strong></p>
+                <p>Type: {{ record.classification }}</p>
+                <a href="{{ record.file_url }}" target="_blank">View Record</a>
+            </div>
+            {% else %}
+            <p>No records available for this patient.</p>
+            {% endfor %}
+        </div>
+
+        <div class="upload-section">
+            <h3>Upload New Record</h3>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+                <input type="text" name="record_name" placeholder="Record Name" required>
+                <select name="classification" required>
+                    <option value="visit">Visit</option>
+                    <option value="scan">Scan</option>
+                    <option value="lab">Lab Result</option>
+                </select>
+                <textarea name="notes" placeholder="Notes..."></textarea>
+                <input type="file" name="file" accept=".pdf" required>
+                <button type="submit">Upload Record</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

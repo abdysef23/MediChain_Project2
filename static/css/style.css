@@ -154,12 +154,15 @@ a {
 }
 
 .sidebar nav a {
-    display: block;
+    display: flex; /* NEW: Make the link a flex container to align icon and text */
+    align-items: center; /* NEW: Vertically centers the icon with the text */
+    gap: 1rem; /* NEW: Adds space between the icon and the text */
     color: var(--gray-700);
     padding: 1rem 1.5rem;
     margin-bottom: 0.5rem;
     border-radius: 8px;
     font-weight: 600;
+    transition: background-color var(--transition-speed), color var(--transition-speed); /* Added for smoother hover */
 }
 
 .sidebar nav a:hover {
@@ -444,4 +447,43 @@ a {
 .detail-actions .btn {
     width: auto; /* Make buttons fit their content */
     min-width: 150px;
+}
+/* --- Filter Navigation --- */
+.filter-nav {
+    display: flex;
+    gap: 1.5rem; /* Space between the filter tabs */
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 1rem 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    cursor: pointer;
+    position: relative;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.filter-btn:hover {
+    color: var(--primary-blue);
+}
+
+.filter-btn.active {
+    color: var(--gray-900); /* Make the active tab text darker */
+}
+
+/* This is the active indicator bar */
+.filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* Sits on top of the container's bottom border */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--gray-900);
+    border-radius: 2px;
 }
