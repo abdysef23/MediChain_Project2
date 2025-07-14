@@ -1,3 +1,5 @@
+<!-- REPLACE THE ENTIRE CONTENT OF templates/record_detail.html WITH THIS BLOCK -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,30 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Details - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Feather Icons Script -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
-                <a href="{{ url_for('dashboard') }}">Home</a>
-                <a href="{{ url_for('records') }}" class="active">Records</a>
-                <a href="#">Appointments</a>
-                <a href="#">Messages</a>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}" class="active"><i data-feather="file-text"></i> Records</a>
+                <a href="#"><i data-feather="calendar"></i> Appointments</a>
+                <a href="#"><i data-feather="message-square"></i> Messages</a>
             </nav>
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
             </div>
         </aside>
 
+        <!-- THIS IS THE SECTION THAT WAS MISSING -->
         <main class="main-content">
             <div class="detail-container">
                 <div class="detail-icon-wrapper">
                     <!-- Display a PDF or Image icon based on the file type -->
                     {% if file_type == 'pdf' %}
-                    <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    <i data-feather="file-text" class="detail-icon" style="width: 48px; height: 48px;"></i>
                     {% else %}
-                    <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <i data-feather="image" class="detail-icon" style="width: 48px; height: 48px;"></i>
                     {% endif %}
                 </div>
                 
@@ -52,6 +57,12 @@
                 </div>
             </div>
         </main>
+        <!-- END OF THE MISSING SECTION -->
+
     </div>
+    <!-- Script to activate icons -->
+    <script>
+      feather.replace()
+    </script>
 </body>
 </html>

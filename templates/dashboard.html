@@ -5,23 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- ADD THIS SCRIPT FOR ICONS -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
-    <header class="sidebar-header">MediChain</header>
-    <nav>
-        <a href="{{ url_for('dashboard') }}" class="active">Home</a>
-        <a href="{{ url_for('records') }}">Records</a>
-        <a href="#">Appointments</a>
-        <a href="#">Messages</a>
-    </nav>
-    
-    <div class="sidebar-footer">
-        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
-    </div>
+            <header class="sidebar-header">MediChain</header>
+            <!-- REPLACE THE NAV SECTION WITH THIS -->
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="active">
+                    <i data-feather="home"></i> Home
+                </a>
+                <a href="{{ url_for('records') }}">
+                    <i data-feather="file-text"></i> Records
+                </a>
+                <a href="#">
+                    <i data-feather="calendar"></i> Appointments
+                </a>
+                <a href="#">
+                    <i data-feather="message-square"></i> Messages
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
         </aside>
         <main class="main-content">
+            <!-- ... (rest of the file is unchanged) ... -->
             <header class="main-header">
                 <h1>Hi, {{ user.name }}</h1>
             </header>
@@ -34,7 +45,7 @@
                     </a>
                     <a href="{{ url_for('qr_code') }}" class="card">
                         <h3>Share with Doctors</h3>
-                        <p>See who has access to your records.</p>
+                        <p>Generate a QR code to grant access.</p>
                     </a>
                     <div class="card">
                         <h3>Appointments</h3>
@@ -44,5 +55,9 @@
             </section>
         </main>
     </div>
+    <!-- ADD THIS SCRIPT AT THE END TO ACTIVATE ICONS -->
+    <script>
+      feather.replace()
+    </script>
 </body>
 </html>
