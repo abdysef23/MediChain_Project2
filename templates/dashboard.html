@@ -16,8 +16,7 @@
                 <a href="{{ url_for('dashboard') }}" class="active"><i data-feather="home"></i> Home</a>
                 <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
                 <a href="#"><i data-feather="calendar"></i> Appointments</a>
-                <a href="#"><i data-feather="message-square"></i> Messages</a>
-            </nav>
+                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>            </nav>
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
             </div>

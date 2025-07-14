@@ -19,7 +19,7 @@
                 <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
                 <a href="{{ url_for('records') }}" class="active"><i data-feather="file-text"></i> Records</a>
                 <a href="#"><i data-feather="calendar"></i> Appointments</a>
-                <a href="#"><i data-feather="message-square"></i> Messages</a>
+                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
                 {% endif %}
             </nav>
             {% if not doctor_view %}

@@ -932,3 +932,156 @@ a {
     width: auto;
     flex-grow: 1; /* Makes both buttons equal width */
 }
+/* --- Drug Guide Styles --- */
+.search-form { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.search-form input { flex-grow: 1; }
+.search-form button { width: auto; }
+
+.drug-list { display: flex; flex-direction: column; gap: 1rem; }
+.drug-item { display: flex; align-items: center; gap: 1.5rem; background: var(--bg-secondary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-primary); text-decoration: none; transition: border-color .2s; }
+.drug-item:hover { border-color: var(--primary-blue); }
+.drug-item img { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; }
+.drug-item strong { color: var(--text-primary); }
+.drug-item span { color: var(--text-secondary); font-size: 0.9rem; }
+
+.drug-detail-header { display: flex; gap: 2rem; align-items: center; margin-bottom: 2rem; }
+.drug-detail-header img { width: 100px; height: 100px; border-radius: 8px; }
+.drug-detail-header h1 { margin: 0; font-size: 2rem; }
+.drug-detail-header h2 { margin: 0; font-size: 1.2rem; color: var(--text-secondary); }
+.drug-detail-header .summary { margin-top: 0.5rem; color: var(--text-primary); }
+
+.tabs-nav { display: flex; gap: 2rem; border-bottom: 1px solid var(--border-primary); margin-bottom: 2rem; }
+.tab-link { background: none; border: none; padding-bottom: 1rem; color: var(--text-secondary); font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; }
+.tab-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+
+.tab-content { display: none; line-height: 1.7; }
+.tab-content.active { display: block; animation: fadeIn .5s; }
+.tab-content h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+/* --- NEW: Enhanced Drug Guide Page Styling --- */
+
+/* Wrapper for the search input and its icon */
+.search-wrapper {
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+.search-wrapper .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    width: 20px;
+    height: 20px;
+}
+
+/* The search input field itself */
+.search-form input[type="search"] {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 3rem; /* Left padding makes space for the icon */
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.search-form input[type="search"]:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Hiding the separate search button for a cleaner look */
+.search-form button {
+    display: none;
+}
+
+/* The container for the list of drug cards */
+.drug-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Styling for each individual drug card */
+.drug-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-primary);
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.drug-item:hover {
+    border-color: var(--primary-blue);
+    background-color: var(--bg-tertiary);
+}
+
+.drug-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.drug-item .drug-info strong {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.drug-item .drug-info span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Message for when no drugs are found */
+.no-results-message {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px dashed var(--border-primary);
+    border-radius: 12px;
+}
+/* --- NEW: Grid View for Drug Guide --- */
+.view-switcher {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+.view-btn {
+    background: none;
+    border: 1px solid var(--border-primary);
+    padding: 0.5rem;
+    border-radius: 6px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+.view-btn.active {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+.drug-list.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.drug-list.grid-view .drug-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+}
+.drug-list.grid-view .drug-item img {
+    width: 80px;
+    height: 80px;
+    margin: 0;
+}

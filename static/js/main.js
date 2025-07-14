@@ -104,3 +104,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+// REPLACE THE OLD, BROKEN FUNCTION WITH THIS NEW ONE
+// REPLACE THE OLD, BROKEN FUNCTION WITH THIS NEW ONE
+function openDrugTab(evt, tabName) {
+    // Hide all elements with the class "tab-content"
+    const tabcontent = document.querySelectorAll(".tab-content");
+    tabcontent.forEach(tab => {
+        tab.style.display = "none";
+        tab.classList.remove("active");
+    });
+
+    // Remove the "active" class from all tab-link buttons
+    const tablinks = document.querySelectorAll(".tab-link");
+    tablinks.forEach(link => {
+        link.classList.remove("active");
+    });
+
+    // Show the specific tab content that should be visible
+    const activeTab = document.getElementById(tabName);
+    if (activeTab) {
+        activeTab.style.display = "block";
+        activeTab.classList.add("active");
+    }
+    
+    // Add the "active" class to the button that was clicked
+    evt.currentTarget.classList.add("active");
+
+}
+// --- Drug Guide View Switcher Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const listViewBtn = document.getElementById('list-view-btn');
+    const gridViewBtn = document.getElementById('grid-view-btn');
+    const drugListContainer = document.getElementById('drug-list-container');
+
+    if (listViewBtn && gridViewBtn && drugListContainer) {
+        listViewBtn.addEventListener('click', () => {
+            drugListContainer.classList.remove('grid-view');
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        });
+
+        gridViewBtn.addEventListener('click', () => {
+            drugListContainer.classList.add('grid-view');
+            gridViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+        });
+    }
+});

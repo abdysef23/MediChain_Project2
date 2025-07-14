@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ drug.trade_name }} - Drug Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <!-- THIS IS THE FULL, CORRECT SIDEBAR -->
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <a href="{{ url_for('drug_guide') }}" class="active"><i data-feather="book-open"></i> Drug Guide</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- THIS IS THE FULL, CORRECT MAIN CONTENT AREA -->
+        <main class="main-content">
+            <div class="drug-detail-header">
+                <img src="{{ drug.image_url or 'https://via.placeholder.com/100' }}" alt="{{ drug.trade_name }}">
+                <div>
+                    <h1>{{ drug.trade_name }}</h1>
+                    <h2>{{ drug.scientific_name }}</h2>
+                    <p class="summary">{{ drug.summary }}</p>
+                </div>
+            </div>
+
+            <div class="tabs-nav">
+                <button class="tab-link active" onclick="openDrugTab(event, 'overview')">Overview</button>
+                <button class="tab-link" onclick="openDrugTab(event, 'dosage')">Dosage</button>
+                <button class="tab-link" onclick="openDrugTab(event, 'side-effects')">Side Effects</button>
+                <button class="tab-link" onclick="openDrugTab(event, 'alternatives')">Alternatives</button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="content-section"><h4>Indications</h4><p>{{ drug.overview_indications }}</p></div>
+                <div class="content-section"><h4>Important Warnings</h4><p>{{ drug.overview_warnings }}</p></div>
+                <div class="content-section"><h4>How it Works</h4><p>{{ drug.overview_how_it_works }}</p></div>
+            </div>
+            <div id="dosage" class="tab-content">
+                <div class="content-section"><h4>Adults</h4><p>{{ drug.dosage_adults }}</p></div>
+                <div class="content-section"><h4>Children</h4><p>{{ drug.dosage_children }}</p></div>
+                <div class="content-section"><h4>Instructions</h4><p>{{ drug.dosage_instructions }}</p></div>
+            </div>
+            <div id="side-effects" class="tab-content">
+                <div class="content-section"><h4>Common Side Effects</h4><p>{{ drug.side_effects_common }}</p></div>
+                <div class="content-section"><h4>Rare & Serious Side Effects</h4><p>{{ drug.side_effects_serious }}</p></div>
+            </div>
+            <div id="alternatives" class="tab-content">
+                <h3>Alternatives</h3>
+                <div class="drug-list">
+                    {% for alt in alternatives %}
+                    <a href="{{ url_for('drug_detail', drug_id=alt.id) }}" class="drug-item">
+                        <img src="{{ alt.image_url or 'https://via.placeholder.com/60' }}" alt="{{ alt.trade_name }}">
+                        <div class="drug-info">
+                            <strong>{{ alt.trade_name }}</strong>
+                            <span>{{ alt.scientific_name }}</span>
+                        </div>
+                    </a>
+                    {% else %}
+                    <p>No alternatives with the same active ingredient found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>feather.replace()</script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
