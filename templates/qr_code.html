@@ -2,53 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Share Your Records</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Records - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Libraries for QR Code and Icons -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
-    <div class="qr-container">
-        <h3>Share your records</h3>
-        <p>Show this to a doctor to grant them access.</p>
-        <div id="qrcode-frame">
-            <div id="qrcode"></div>
-        </div>
-        <div class="qr-actions">
-            <button class="btn btn-secondary">Refresh QR</button>
-            <!-- Added id="copyLinkBtn" to target the button with JavaScript -->
-            <button class="btn btn-primary" id="copyLinkBtn">Copy Link</button>
-        </div>
+    <div class="layout-wrapper">
+        <!-- Patient Sidebar -->
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <a href="#"><i data-feather="calendar"></i> Appointments</a>
+                <a href="#"><i data-feather="message-square"></i> Messages</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="qr-page-wrapper">
+                <div class="qr-container">
+                    <h3>Share your records</h3>
+                    <p>Show this to a doctor to grant them access.</p>
+                    
+                    <!-- This is the new layered structure -->
+                    <div class="qr-mat">
+                        <div class="qrcode-frame">
+                            <div id="qrcode"></div>
+                        </div>
+                    </div>
+        
+                    <div class="qr-actions">
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <i data-feather="refresh-cw"></i>
+                            <span>Refresh QR code</span>
+                        </button>
+                        <button class="btn btn-primary" id="copyLinkBtn">
+                            <i data-feather="copy"></i>
+                            <span>Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        // --- This part generates the QR code (no changes here) ---
         const qrCodeUrl = "{{ qr_code_url }}";
+
         new QRCode(document.getElementById("qrcode"), {
             text: qrCodeUrl,
-            width: 200,
-            height: 200
+            width: 180, height: 180,
+            colorDark : "#0D1117", colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
         });
 
-        // --- NEW: This script adds the copy functionality ---
         const copyBtn = document.getElementById('copyLinkBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
 
         copyBtn.addEventListener('click', () => {
-            // Use the modern navigator.clipboard API
             navigator.clipboard.writeText(qrCodeUrl).then(() => {
-                // Provide feedback to the user
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                
-                // Change the text back after 2 seconds
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                }, 2000);
-
+                const copySpan = copyBtn.querySelector('span');
+                const originalText = copySpan.textContent;
+                copySpan.textContent = 'Copied!';
+                setTimeout(() => { copySpan.textContent = originalText; }, 2000);
             }).catch(err => {
-                console.error('Failed to copy text: ', err);
+                console.error('Failed to copy link:', err);
                 alert('Failed to copy the link.');
             });
         });
+
+        refreshBtn.addEventListener('click', () => { window.location.reload(); });
+
+        feather.replace();
     </script>
 </body>
 </html>

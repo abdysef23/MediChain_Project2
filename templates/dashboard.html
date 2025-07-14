@@ -5,57 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- ADD THIS SCRIPT FOR ICONS -->
+    <!-- Feather Icons Script -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
-            <!-- REPLACE THE NAV SECTION WITH THIS -->
             <nav>
-                <a href="{{ url_for('dashboard') }}" class="active">
-                    <i data-feather="home"></i> Home
-                </a>
-                <a href="{{ url_for('records') }}">
-                    <i data-feather="file-text"></i> Records
-                </a>
-                <a href="#">
-                    <i data-feather="calendar"></i> Appointments
-                </a>
-                <a href="#">
-                    <i data-feather="message-square"></i> Messages
-                </a>
+                <a href="{{ url_for('dashboard') }}" class="active"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <a href="#"><i data-feather="calendar"></i> Appointments</a>
+                <a href="#"><i data-feather="message-square"></i> Messages</a>
             </nav>
             <div class="sidebar-footer">
-                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
             </div>
         </aside>
+
+        <!-- THIS IS THE NEWLY STRUCTURED MAIN CONTENT AREA -->
         <main class="main-content">
-            <!-- ... (rest of the file is unchanged) ... -->
+            
+            <!-- New Header Bar -->
             <header class="main-header">
-                <h1>Hi, {{ user.name }}</h1>
-            </header>
-            <section>
-                <h2 class="section-title">Quick Actions</h2>
-                <div class="quick-actions">
-                    <a href="{{ url_for('records') }}" class="card">
-                        <h3>View Records</h3>
-                        <p>Access your complete medical history.</p>
-                    </a>
-                    <a href="{{ url_for('qr_code') }}" class="card">
-                        <h3>Share with Doctors</h3>
-                        <p>Generate a QR code to grant access.</p>
-                    </a>
-                    <div class="card">
-                        <h3>Appointments</h3>
-                        <p>Manage and schedule your appointments.</p>
+                <h1>Dashboard</h1>
+                <div class="user-profile">
+                    <i data-feather="bell" class="notification-bell"></i>
+                    <div class="avatar">{{ user.name[0] }}</div>
+                    <div>
+                        <div style="font-weight: 600;">{{ user.name }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Patient</div>
                     </div>
                 </div>
+            </header>
+
+            <!-- Health Summary Section -->
+            <section>
+                <h2 class="section-title">Health Summary</h2>
+                <div class="summary-cards-container">
+                    <a href="#" class="summary-card">
+                        <!-- You can find appropriate images online or create them -->
+                        <img src="https://via.placeholder.com/80" alt="Health Status Icon">
+                        <div>
+                            <h3>Health Status</h3>
+                            <p>Overall health is good. Keep up with your regular check-ups.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="summary-card">
+                        <img src="https://via.placeholder.com/80" alt="Chronic Conditions Icon">
+                        <div>
+                            <h3>Chronic Conditions</h3>
+                            <p>No chronic conditions reported. Continue to monitor your health.</p>
+                        </div>
+                    </a>
+                </div>
             </section>
+
+            <!-- Quick Actions Section -->
+            <section>
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="quick-actions-container">
+                    <a href="{{ url_for('records') }}" class="action-card">
+                        <div class="icon-wrapper"><i data-feather="file-text"></i></div>
+                        <span>View Records</span>
+                    </a>
+                    <a href="#" class="action-card"> <!-- Link to upload page if you have one for patients -->
+                        <div class="icon-wrapper"><i data-feather="upload"></i></div>
+                        <span>Upload Lab Results</span>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="icon-wrapper"><i data-feather="calendar"></i></div>
+                        <span>Appointments</span>
+                    </a>
+                    <a href="{{ url_for('qr_code') }}" class="action-card">
+                        <div class="icon-wrapper"><i data-feather="share-2"></i></div>
+                        <span>Shared with Doctors</span>
+                    </a>
+                </div>
+            </section>
+
         </main>
+        <!-- END OF NEW STRUCTURE -->
+
     </div>
-    <!-- ADD THIS SCRIPT AT THE END TO ACTIVATE ICONS -->
+    <!-- Script to activate icons -->
     <script>
       feather.replace()
     </script>

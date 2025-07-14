@@ -36,8 +36,19 @@ except Exception as e:
 
 @app.route('/')
 def index():
-    """Renders the login/signup page."""
+    """Renders the new landing page or redirects to dashboard if logged in."""
+    if 'user_id' in session:
+        return redirect(url_for('dashboard'))
     return render_template('index.html')
+
+@app.route('/auth')
+def auth():
+    """Renders the new login/signup page."""
+    # If the user is already logged in, just send them to the dashboard.
+    if 'user_id' in session:
+        return redirect(url_for('dashboard'))
+    return render_template('auth.html')
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -252,7 +263,8 @@ def upload_record():
         return jsonify({"message": f"An error occurred during upload: {str(e)}"}), 500
 
 
-
+def auth():
+    return render_template('auth.html')
 
 
 @app.route('/profile')

@@ -3,43 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Record</title>
+    <title>Upload Record - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="upload-container">
-        <h2>Upload Record for {{ patient.name }}</h2>
-        <form action="{{ url_for('upload_record') }}" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="patient_id" value="{{ patient.id }}">
-    <div class="upload-box">
-        <p>Drag and drop files here</p>
-        <span>Or</span>
-        <br><br>
-        <input type="file" name="file" required class="btn btn-secondary">
-    </div>
-    <div class="form-group">
-        <label for="record_name">Record Name</label>
-        <input type="text" id="record_name" name="record_name" placeholder="e.g., Annual Checkup Summary" required>
-    </div>
-    <div class="form-group">
-        <label for="classification">Classification</label>
-        <select id="classification" name="classification" required>
-            <option value="Visit Summary">Visit Summary</option>
-            <option value="Lab Results">Lab Results</option>
-            <option value="Imaging">Imaging</option>
-            <option value="Vaccination">Vaccination</option>
-        </select>
-    </div>
+    <div class="layout-wrapper">
+        <!-- Doctor's Sidebar -->
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="#" class="active"><i data-feather="upload-cloud"></i> Upload Record</a>
+                <a href="{{ url_for('doctor_view', qr_id=patient.qr_id) }}"><i data-feather="arrow-left"></i> Back to Records</a>
+            </nav>
+        </aside>
 
-    <!-- This is the new 'Hints' field -->
-    <div class="form-group">
-        <label for="hints">Hints / Notes</label>
-        <textarea id="hints" name="hints" class="form-control" rows="3" placeholder="e.g., Patient reported mild headache, blood pressure normal..."></textarea>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="upload-container">
+                    <h2>Upload Record for {{ patient.name }}</h2>
+                    <form action="{{ url_for('upload_record') }}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                        
+                        <div class="upload-box">
+                            <p>Drag and drop files here</p>
+                            <span>or</span>
+                            <br><br>
+                            <input type="file" name="file" required class="btn btn-secondary" style="width: auto;">
+                        </div>
 
+                        <div class="form-group">
+                            <label for="record_name">Record Name</label>
+                            <input type="text" id="record_name" name="record_name" placeholder="e.g., Annual Checkup Summary" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="classification">Classification</label>
+                            <select id="classification" name="classification" required>
+                                <option value="Visit Summary">Visit Summary</option>
+                                <option value="Lab Results">Lab Results</option>
+                                <option value="Vaccination">Vaccination</option>
+                                <option value="Imaging">Imaging</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hints">Hints / Notes</label>
+                            <textarea id="hints" name="hints" rows="4" placeholder="e.g., Patient reported mild headache, blood pressure normal..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
 </body>
 </html>

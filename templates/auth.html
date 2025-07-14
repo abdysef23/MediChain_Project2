@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - MediChain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab-link active" onclick="openTab(event, 'Login')">Login</button>
+                <button class="tab-link" onclick="openTab(event, 'SignUp')">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="Login" class="tab-content active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email/Phone</label>
+                        <input type="email" id="login-email" name="email" placeholder="Enter your email or phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+                </form>
+            </div>
+
+            <!-- THIS IS THE COMPLETE SIGN UP FORM THAT WAS MISSING -->
+            <div id="SignUp" class="tab-content">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="user_type">I am a...</label>
+                        <select id="user_type" name="user_type" required>
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="patient">Patient</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign Up</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

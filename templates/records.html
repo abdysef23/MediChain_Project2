@@ -1,11 +1,9 @@
-<!-- REPLACE THE ENTIRE CONTENT OF templates/records.html WITH THIS BLOCK -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ 'Doctor View | ' + user.name if doctor_view else 'My Health Records' }}</title>
+    <title>{{ 'Doctor View | ' + user.name if doctor_view else 'Your Health Records' }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- Feather Icons Script -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -26,15 +24,14 @@
             </nav>
             {% if not doctor_view %}
             <div class="sidebar-footer">
-                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
             </div>
             {% endif %}
         </aside>
 
-        <!-- THIS IS THE SECTION THAT WAS MISSING -->
         <main class="main-content">
             <header class="records-header">
-                <h1>{{ 'Records for: ' + user.name if doctor_view else 'My Health Records' }}</h1>
+                <h1>{{ 'Records for: ' + user.name if doctor_view else 'Your Health Records' }}</h1>
                 {% if doctor_view %}
                 <a href="{{ url_for('upload_page', patient_id=patient_id) }}" class="btn btn-primary">Upload New Record</a>
                 {% endif %}
@@ -50,34 +47,42 @@
 
             <div class="records-list">
                 {% for record in records %}
-                <a href="{{ url_for('record_detail', record_id=record.id) if not doctor_view else record.file_url }}" 
+                <a href="{{ url_for('record_detail', record_id=record.id) }}" 
                    class="record-item record-item-filterable" 
-                   data-classification="{{ record.classification }}"
-                   {% if doctor_view %}target="_blank"{% endif %}>
+                   data-classification="{{ record.classification }}">
                     <div class="record-icon">
-                        <i data-feather="file"></i>
+                        <!-- THIS IS THE NEW ICON LOGIC -->
+                        {% if record.classification == 'Visit Summary' %}
+                            <i data-feather="clipboard"></i>
+                        {% elif record.classification == 'Lab Results' %}
+                            <i data-feather="beaker"></i>
+                        {% elif record.classification == 'Vaccination' %}
+                            <i data-feather="shield"></i>
+                        {% elif record.classification == 'Imaging' %}
+                            <i data-feather="camera"></i>
+                        {% else %}
+                            <i data-feather="file-text"></i>
+                        {% endif %}
                     </div>
                     <div class="record-info">
                         <strong>{{ record.file_name }}</strong>
-                        <span>{{ record.classification | default('PDF', true) | upper }}</span>
+                        <span>{{ record.classification | default('Document', true) }}</span>
                     </div>
                     <div class="record-date">{{ record.uploaded_at.split('T')[0] }}</div>
                 </a>
                 {% else %}
-                <div class="record-item" style="justify-content: center;">
+                <div class="record-item-empty">
                     <p>No records found for this patient.</p>
                 </div>
                 {% endfor %}
             </div>
         </main>
-        <!-- END OF THE MISSING SECTION -->
-
     </div>
-    <!-- Script to activate icons -->
+
+    <!-- Script to activate icons and filtering -->
     <script>
       feather.replace()
     </script>
-    <!-- Link to the main JavaScript file that contains the filtering logic -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

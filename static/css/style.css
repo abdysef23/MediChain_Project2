@@ -1,82 +1,156 @@
-/* static/css/style.css */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+/* Dark Theme for MediChain / HealthTrack */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --primary-blue: #0d6efd;
-    --light-blue: #e7f1ff;
-    --dark-blue: #0a58ca;
-    --white: #ffffff;
-    --gray-100: #f8f9fa;
-    --gray-200: #e9ecef;
-    --gray-500: #adb5bd;
-    --gray-700: #495057;
-    --gray-900: #212529;
-    --border-color: #dee2e6;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --font-family: 'Manrope', sans-serif;
+    --primary-blue: #3B82F6;
+    --light-blue: #1E3A8A;
+    --dark-blue-hover: #2563EB;
+    
+    --bg-primary: #0D1117;     /* Main background */
+    --bg-secondary: #161B22;   /* Cards, sidebars */
+    --bg-tertiary: #21262D;    /* Input fields, hover states */
+
+    --text-primary: #E6EDF3;   /* Main text */
+    --text-secondary: #8B949E; /* Subtitles, placeholders */
+    --text-brand: var(--primary-blue);
+
+    --border-primary: #30363D;
+    --border-secondary: #8B949E;
+    
+    --shadow: none; /* Dark themes often use borders more than shadows */
+
+    --font-family: 'Inter', sans-serif;
+    --transition-speed: 0.2s;
 }
 
 /* --- General & Reset --- */
 body {
     font-family: var(--font-family);
-    background-color: var(--gray-100);
-    color: var(--gray-900);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     margin: 0;
+    line-height: 1.6;
 }
 
 a {
     text-decoration: none;
-    color: var(--primary-blue);
+    color: var(--text-brand);
 }
 
-/* --- Login & Sign Up Page (index.html) --- */
-.auth-wrapper {
+/* --- Landing Page (index.html) --- */
+.landing-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 2rem;
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
 }
 
-.auth-header {
-    width: 100%;
-    max-width: 450px;
-    padding-bottom: 2rem;
-    text-align: left;
-    font-size: 1.5rem;
-    font-weight: 700;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.landing-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.landing-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.landing-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* --- General Button Styles --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--text-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-blue-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-primary);
+}
+
+.btn-secondary:hover {
+    border-color: var(--border-secondary);
+}
+
+/* --- Auth Page --- */
+.auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5% 2rem 2rem 2rem; /* Added padding for smaller screens */
+    box-sizing: border-box;
 }
 
 .auth-container {
-    background: var(--white);
-    padding: 2rem 2.5rem;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    background: var(--bg-secondary);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-primary);
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .auth-tabs {
     display: flex;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-primary);
     margin-bottom: 2rem;
 }
 
 .auth-tabs .tab-link {
     background: none;
     border: none;
-    padding: 1rem 1.5rem;
+    padding: 0.75rem 0; /* Adjusted padding */
+    margin-right: 2rem; /* Space between tabs */
     font-size: 1rem;
     font-weight: 600;
-    color: var(--gray-500);
+    color: var(--text-secondary);
     cursor: pointer;
     position: relative;
+    border-bottom: 3px solid transparent; /* Placeholder for active state */
+    transition: color 0.2s ease;
+}
+
+.auth-tabs .tab-link:hover {
+    color: var(--text-primary);
 }
 
 .auth-tabs .tab-link.active {
-    color: var(--primary-blue);
-    border-bottom: 3px solid var(--primary-blue);
+    color: var(--text-primary);
+    border-bottom-color: var(--primary-blue);
 }
 
 .tab-content { display: none; }
@@ -87,403 +161,774 @@ a {
 }
 
 .form-group label {
-    display: block;
+    display: block; /* THIS IS THE KEY FIX: Forces the label above the input */
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem; /* Space between label and input */
+    color: var(--text-secondary);
 }
 
-.form-group input, .form-group select, .form-group textarea {
+.form-group input, 
+.form-group select, 
+.form-group textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-primary);
+    border-radius: 6px;
     font-size: 1rem;
-    font-family: var(--font-family); /* Ensures the font is consistent */
-    box-sizing: border-box; /* Prevents padding from breaking layout */
-    resize: vertical; /* Allows users to resize the box, but only up and down */
-    min-height: 50px; /* Sets a minimum height */
+    font-family: var(--font-family);
+    box-sizing: border-box;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
 
-/* This rule now includes 'textarea' for the blue glow on focus */
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+.form-group input::placeholder {
+    color: var(--text-secondary);
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
     outline: none;
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px var(--light-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-.btn {
+/* Specific style for the main submit button inside the form */
+.auth-container .btn {
     width: 100%;
-    padding: 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    margin-top: 1rem;
 }
 
-.btn-primary {
-    background-color: var(--primary-blue);
-    color: var(--white);
+.auth-container {
+    background: var(--bg-secondary);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-primary);
+    width: 100%;
+    max-width: 420px;
+    animation: fadeIn 0.5s ease-out;
+}
+/* ... (auth-tabs styles can be reused) ... */
+.form-group input, .form-group select {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+}
+.form-group input::placeholder {
+    color: var(--text-secondary);
+}
+.form-group input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-.btn-primary:hover {
-    background-color: var(--dark-blue);
-}
-
-/* --- Layout (Dashboard, Records) --- */
+/* --- Layout --- */
 .layout-wrapper {
     display: flex;
+    height: 100vh;
 }
 
 .sidebar {
     width: 260px;
-    background: var(--white);
-    height: 100vh;
-    padding: 2rem;
+    background: var(--bg-secondary);
+    height: 100%;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-primary);
     box-sizing: border-box;
+    flex-shrink: 0; /* Prevents sidebar from shrinking */
+}
+
+.main-content {
+    flex-grow: 1; /* Allows this section to take up all remaining space */
+    padding: 2rem 3rem;
+    overflow-y: auto; /* Adds a scrollbar if content is too long */
+    height: 100vh;
+    box-sizing: border-box;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .sidebar-header {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 2.5rem;
+    padding-left: 1rem;
+}
+
+.sidebar nav {
+    flex-grow: 1;
 }
 
 .sidebar nav a {
-    display: flex; /* NEW: Make the link a flex container to align icon and text */
-    align-items: center; /* NEW: Vertically centers the icon with the text */
-    gap: 1rem; /* NEW: Adds space between the icon and the text */
-    color: var(--gray-700);
-    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: 8px;
     font-weight: 600;
-    transition: background-color var(--transition-speed), color var(--transition-speed); /* Added for smoother hover */
+    color: var(--text-secondary);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 .sidebar nav a:hover {
-    background-color: var(--gray-100);
+    background-color: var(--bg-tertiary);
 }
 
 .sidebar nav a.active {
     background-color: var(--light-blue);
-    color: var(--primary-blue);
+    color: var(--text-primary);
 }
 
-.main-content {
-    flex: 1;
-    padding: 2rem 3rem;
-    overflow-y: auto;
-    height: 100vh;
-    box-sizing: border-box;
+.sidebar-footer {
+    margin-top: auto;
 }
 
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--text-secondary);
+    text-align: left;
+    box-sizing: border-box; /* This is the line that fixes the overflow */
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.logout-btn:hover {
+    background: var(--bg-tertiary);
+}
+.sidebar-header { font-size: 1.5rem; font-weight: 700; margin-bottom: 2.5rem; }
+.sidebar nav a {
+    color: var(--text-secondary); /* Inactive links are secondary color */
+}
+.sidebar nav a.active {
+    background-color: var(--light-blue);
+    color: var(--text-primary); /* Active link is primary color */
+}
+.logout-btn {
+    background: transparent;
+    color: var(--text-secondary);
+}
+.logout-btn:hover {
+    background: var(--bg-tertiary);
+}
+
+/* --- Dashboard & Cards --- */
 .main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 1.5rem;
     margin-bottom: 2rem;
+}
+.card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    box-shadow: none;
+}
+.card:hover {
+    border-color: var(--primary-blue);
+    transform: none; /* No lift, just border highlight */
+}
+
+/* --- Records Page --- */
+.records-header .btn {
+    border-radius: 6px;
+    background-color: var(--primary-blue);
+    border: none;
+}
+.filter-nav { border-bottom-color: var(--border-primary); }
+.filter-btn { color: var(--text-secondary); }
+.filter-btn.active {
+    color: var(--text-primary);
+}
+.filter-btn.active::after {
+    background-color: var(--primary-blue); /* Active tab indicator is blue */
+}
+.records-list {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+.record-item {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: border-color var(--transition-speed);
+}
+.record-item:hover {
+    border-color: var(--primary-blue);
+}
+.record-icon {
+    background-color: var(--bg-tertiary);
+    border-radius: 6px;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+.record-info span {
+    color: var(--text-secondary);
+}
+.record-date {
+    color: var(--text-secondary);
+}
+
+/* --- Record Detail Page --- */
+.detail-container {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+.detail-icon-wrapper {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+}
+.detail-meta {
+    border-bottom-color: var(--border-primary);
+}
+/* --- NEW: Enhanced Dashboard Layout --- */
+
+/* Main Header (contains "Dashboard" title and user profile) */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .main-header h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    font-weight: 700;
     margin: 0;
 }
 
-/* --- Dashboard Page (dashboard.html) --- */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-profile .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-blue); /* Placeholder */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.user-profile .notification-bell {
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-speed);
+}
+
+.user-profile .notification-bell:hover {
+    color: var(--text-primary);
+}
+
+/* Section titles like "Health Summary" */
 .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
 }
 
-.quick-actions {
+/* Container for the two large summary cards */
+.summary-cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
-.card {
-    background: var(--white);
+/* Styling for the large "Health Status" and "Chronic Conditions" cards */
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: var(--bg-secondary);
     padding: 1.5rem;
+    border: 1px solid var(--border-primary);
     border-radius: 12px;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: border-color var(--transition-speed);
 }
 
-.card:hover {
-    transform: translateY(-5px);
+.summary-card:hover {
+    border-color: var(--primary-blue);
 }
 
-.card h3 {
-    margin-top: 0;
+.summary-card img {
+    width: 80px; /* Or your preferred size */
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.summary-card h3 {
+    margin: 0 0 0.5rem 0;
     font-size: 1.1rem;
+    font-weight: 600;
 }
 
-.card p {
-    color: var(--gray-700);
+.summary-card p {
+    margin: 0;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
-/* --- Records Page (records.html) --- */
+/* Container for the smaller action cards */
+.quick-actions-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+/* Styling for the small "View Records", "Upload", etc., cards */
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: var(--bg-secondary);
+    padding: 2rem 1rem;
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-blue);
+    background-color: var(--bg-tertiary);
+}
+
+.action-card .icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--light-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-card .icon-wrapper i {
+    color: var(--text-primary);
+    width: 24px;
+    height: 24px;
+}
+
+.action-card span {
+    font-weight: 600;
+}
+/* --- NEW: Enhanced Records Page Layout --- */
+
+/* Main Header on the Records Page */
 .records-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 1.5rem;
     margin-bottom: 2rem;
 }
 
-/* This is the new rule that fixes the button size */
 .records-header .btn {
-    width: auto; /* Overrides the default 100% width */
-    padding: 0.8rem 1.5rem; /* Adjust padding for a better look */
+    width: auto;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
 }
 
+/* Filter Navigation (All, Visits, Labs...) */
+.filter-nav {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 1rem 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s ease;
+}
+
+.filter-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--primary-blue);
+}
+
+/* The container for all record items */
 .records-list {
-    background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* This creates space between the record cards */
 }
 
+/* Individual Record Item Styling */
 .record-item {
     display: flex;
     align-items: center;
+    background-color: var(--bg-secondary);
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.record-item:last-child {
-    border-bottom: none;
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
 }
 
 .record-item:hover {
-    background-color: var(--gray-100);
+    border-color: var(--primary-blue);
+    background-color: var(--bg-tertiary);
 }
 
+/* The circular icon container */
 .record-icon {
-    font-size: 1.5rem;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background-color: var(--bg-tertiary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 1.5rem;
-    color: var(--primary-blue);
 }
 
+.record-icon i {
+    color: var(--text-secondary);
+    width: 20px;
+    height: 20px;
+}
+
+/* The main info block (Name and Classification) */
 .record-info {
     flex-grow: 1;
 }
 
 .record-info strong {
     display: block;
-    font-size: 1rem;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .record-info span {
     font-size: 0.9rem;
-    color: var(--gray-500);
+    color: var(--text-secondary);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/* The date on the far right */
 .record-date {
-    font-weight: 600;
-    color: var(--gray-700);
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
-/* --- Upload Page (upload_records.html) --- */
-.upload-container {
-    max-width: 700px;
-    margin: 2rem auto;
-    background: var(--white);
-    padding: 2rem 2.5rem;
+/* Message for when no records are found */
+.record-item-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px dashed var(--border-primary);
+    border-radius: 8px;
+}
+/* --- NEW: Enhanced QR Code Page Layout --- */
+
+.qr-page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.qr-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 16px;
-    box-shadow: var(--shadow);
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.qr-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.qr-card p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* This creates the white "mat" and wood-style frame */
+./* --- NEW: Final Enhanced QR Code Page --- */
+
+/* This wrapper centers the card vertically and horizontally in the main content area */
+.qr-page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* This is the main dark, rounded container card */
+.qr-container {
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.qr-container h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.qr-container p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* This is the colored square that sits behind the QR code */
+.qr-mat {
+    display: inline-block;
+    background-color: var(--light-blue); /* Using your theme's dark blue */
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* This is the white "paper" holding the QR code */
+.qrcode-frame {
+    display: inline-block;
+    padding: 1rem;
+    background-color: #ffffff; /* Always white for QR readability */
+    border-radius: 8px;
+    /* This shadow creates the "lifted paper" effect */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* The container for the buttons below */
+.qr-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Ensure buttons don't stretch to full width */
+.qr-actions .btn {
+    width: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+/* === Upload Page Styling === */
+
+.upload-container {
+    width: 100%;
+    max-width: 700px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    padding: 2.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.upload-container h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
 }
 
 .upload-box {
-    border: 2px dashed var(--border-color);
+    border: 2px dashed var(--border-primary);
     border-radius: 12px;
-    padding: 3rem;
+    padding: 2rem;
     text-align: center;
-    background-color: var(--gray-100);
-    margin-bottom: 1.5rem;
+    background-color: var(--bg-primary);
+    margin-bottom: 2rem;
+    transition: border-color var(--transition-speed);
+}
+
+.upload-box:hover {
+    border-color: var(--primary-blue);
 }
 
 .upload-box p {
     font-weight: 600;
-    margin: 1rem 0;
+    margin: 0 0 0.5rem 0;
 }
 
-.btn-secondary {
-    background-color: var(--gray-200);
-    color: var(--gray-900);
-    border: 1px solid var(--border-color);
+.upload-box span {
+    color: var(--text-secondary);
 }
 
-.btn-secondary:hover {
-    background-color: #dcdfe2;
-}
+/* === Record Detail Page Styling (Definitive Fix) === */
 
-
-/* --- QR Code Page (qr_code.html) --- */
-.qr-container {
+/* This wrapper centers the detail card within the main content area */
+.content-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 3rem;
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    max-width: 400px;
-    margin: 3rem auto;
-}
-#qrcode-frame {
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-}
-.qr-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-/* ADD THIS ENTIRE BLOCK TO THE END OF YOUR CSS FILE */
-
-/* Make sidebar nav take available space for footer positioning */
-.sidebar nav {
-    flex-grow: 1;
+    width: 100%;
+    min-height: 100%; /* Ensures vertical centering works */
 }
 
-/* Container for the logout button */
-.sidebar-footer {
-    margin-top: auto; /* Pushes the footer to the bottom */
-    padding-top: 1rem; 
-}
-
-/* Styling for the logout button itself */
-.logout-btn {
-    display: block;
-    text-align: center;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-weight: 600;
-    background-color: var(--light-blue);
-    color: var(--primary-blue);
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.logout-btn:hover {
-    background-color: #d8e6fa; /* A slightly darker shade for hover */
-    color: var(--dark-blue);
-}
-
+/* The main container card for all the details */
 .detail-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: var(--white);
-    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 650px; /* A good width for readability */
+    text-align: left; /* Aligns all text to the left */
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 16px;
-    box-shadow: var(--shadow);
-    text-align: center;
+    padding: 2.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Header section containing the icon and title */
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .detail-icon-wrapper {
-    background-color: var(--light-blue);
-    width: 90px;
-    height: 90px;
-    border-radius: 50%; /* Makes it a circle */
-    margin: 0 auto 1.5rem auto;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--bg-tertiary);
+    border-radius: 10px;
 }
 
-.detail-icon {
-    color: var(--primary-blue);
+.detail-icon-wrapper i {
+    width: 28px;
+    height: 28px;
+    color: var(--text-secondary);
 }
 
 .detail-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin: 0;
+    color: var(--text-primary);
 }
 
+/* Metadata section for Classification and Date */
 .detail-meta {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
     gap: 2rem;
-    color: var(--gray-700);
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
 }
 
+.detail-meta div strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.detail-meta div span {
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Hints/Notes Section */
 .detail-notes {
-    text-align: left;
     margin-bottom: 2.5rem;
 }
 
 .detail-notes h2 {
-    font-size: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .detail-notes p {
-    color: var(--gray-700);
+    color: var(--text-primary);
     line-height: 1.6;
+    margin: 0;
 }
 
+/* Action Buttons Section */
 .detail-actions {
     display: flex;
-    justify-content: center;
     gap: 1rem;
+    margin-top: 2rem;
 }
 
 .detail-actions .btn {
-    width: auto; /* Make buttons fit their content */
-    min-width: 150px;
-}
-/* --- Filter Navigation --- */
-.filter-nav {
-    display: flex;
-    gap: 1.5rem; /* Space between the filter tabs */
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 1rem;
-}
-
-.filter-btn {
-    background: none;
-    border: none;
-    padding: 1rem 0.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    cursor: pointer;
-    position: relative;
-    transition: color var(--transition-speed) ease-in-out;
-}
-
-.filter-btn:hover {
-    color: var(--primary-blue);
-}
-
-.filter-btn.active {
-    color: var(--gray-900); /* Make the active tab text darker */
-}
-
-/* This is the active indicator bar */
-.filter-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; /* Sits on top of the container's bottom border */
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: var(--gray-900);
-    border-radius: 2px;
+    width: auto;
+    flex-grow: 1; /* Makes both buttons equal width */
 }
