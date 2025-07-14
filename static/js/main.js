@@ -151,3 +151,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// --- NEW: Appointment Tab Switching Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.appt-tab-btn');
+    const tabContents = document.querySelectorAll('.appointment-list');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Deactivate all buttons and hide all content
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Activate the clicked button
+            button.classList.add('active');
+
+            // Show the corresponding content
+            const targetId = button.dataset.target;
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+});

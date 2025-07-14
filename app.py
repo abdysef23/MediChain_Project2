@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, render_template, session, redirect, u
 from supabase import create_client, Client
 import uuid
 from dotenv import load_dotenv # Used to load environment variables
+from datetime import datetime
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -10,6 +11,20 @@ load_dotenv()
 # --- Initialize Flask App ---
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+ # Set host to '0.0.0.0' to make it accessible on your network
+@app.template_filter('format_datetime')
+def format_datetime_filter(s):
+    """
+    Formats a UTC timestamp string from the database into a more
+    readable format, e.g., 'THURSDAY, 18 JULY 2024, 10:30 AM'.
+    """
+    if s is None:
+        return "No date provided"
+    # Parse the ISO 8601 format string from Supabase
+    dt_object = datetime.fromisoformat(s.replace('Z', '+00:00'))
+    # Format it into the desired string
+    return dt_object.strftime('%A, %d %B %Y, %I:%M %p').upper()
 
 # --- Initialize Supabase ---
 # Get credentials from environment variables for better security
@@ -140,13 +155,81 @@ def record_detail(record_id):
     except Exception as e:
         return f"An error occurred while loading the record: {str(e)}", 500
 
+# REPLACE THE EXISTING dashboard FUNCTION WITH THIS NEW VERSION
+
+# REPLACE THE ENTIRE dashboard FUNCTION WITH THIS CORRECTED BLOCK
+
+# REPLACE THE ENTIRE dashboard FUNCTION WITH THIS DEBUGGING BLOCK
+
 @app.route('/dashboard')
 def dashboard():
-    """Renders the patient's main dashboard."""
-    if 'user_id' not in session: return redirect(url_for('index'))
+    """
+    DEBUGGING VERSION: This function will print database results to the console
+    to help diagnose why appointments are not appearing.
+    """
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+
     user_id = session['user_id']
-    user = supabase.table('users').select('*').eq('id', user_id).single().execute().data
-    return render_template('dashboard.html', user=user)
+    user_response = supabase.table('users').select('*').eq('id', user_id).single().execute()
+    user = user_response.data
+
+    if not user:
+        session.clear()
+        return redirect(url_for('auth'))
+
+    if user['user_type'] == 'doctor':
+        print("--- DOCTOR DASHBOARD DEBUG ---")
+        print(f"Attempting to fetch appointments for doctor_id: {user_id}")
+
+        try:
+            # TEMPORARY: Fetch ALL appointments, with NO filters, to see what's in the table.
+            all_appointments_response = supabase.table('appointments').select('*').execute()
+            
+            print("\nRAW RESPONSE FROM SUPABASE:")
+            print(all_appointments_response)
+            
+            # Now, we will try the original, filtered query and print its result.
+            filtered_appointments_response = supabase.table('appointments') \
+                .select('*, patient:patient_id(*)') \
+                .eq('doctor_id', user_id) \
+                .eq('status', 'upcoming') \
+                .execute()
+
+            print("\nFILTERED RESPONSE (what the page should show):")
+            print(filtered_appointments_response)
+            print("\n--- END DEBUG ---")
+
+            # We will use the filtered data for the page
+            appointments = filtered_appointments_response.data
+            return render_template('doctor_dashboard.html', doctor=user, appointments=appointments)
+
+        except Exception as e:
+            print(f"AN ERROR OCCURRED: {e}")
+            return f"A server error occurred during debugging: {e}", 500
+
+    else:
+        return render_template('dashboard.html', user=user)
+
+
+@app.route('/complete_appointment/<int:appointment_id>', methods=['POST'])
+def complete_appointment(appointment_id):
+    """Marks an appointment as 'completed' in the database."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+
+    # Security check: Ensure the logged-in user is a doctor
+    user_id = session['user_id']
+    user_info = supabase.table('users').select('user_type').eq('id', user_id).single().execute().data
+    if not user_info or user_info.get('user_type') != 'doctor':
+        return "Permission Denied.", 403
+
+    # Update the status of the appointment
+    supabase.table('appointments').update({'status': 'completed'}).eq('id', appointment_id).execute()
+    
+    # Redirect back to the doctor's dashboard
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/records')
 def records():
@@ -266,16 +349,61 @@ def upload_record():
 def auth():
     return render_template('auth.html')
 
+# ADD THIS NEW ROUTE TO APP.PY
 
-@app.route('/profile')
+# REPLACE THE EXISTING profile FUNCTION WITH THIS NEW VERSION
+
+# REPLACE THE ENTIRE profile FUNCTION WITH THIS CORRECTED BLOCK
+
+# REPLACE THE ENTIRE profile FUNCTION WITH THIS CORRECTED BLOCK
+
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    """Renders the user's profile page."""
+    """
+    Handles viewing and updating user profile information.
+    This version has simplified and corrected logic for saving data.
+    """
     if 'user_id' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
 
     user_id = session['user_id']
-    user_data = supabase.table('users').select('*').eq('id', user_id).single().execute().data
-    return render_template('profile.html', user=user_data)
+
+    # Define the list of available medical specialties
+    specialties = [
+        "Cardiology", "Dermatology", "Neurology", "Pediatrics",
+        "Orthopedics", "Radiology", "Gastroenterology", "Oncology",
+        "Psychiatry", "General Practice"
+    ]
+
+    # --- THIS IS THE CORRECTED LOGIC FOR SAVING DATA ---
+    if request.method == 'POST':
+        # Prepare the data dictionary with the gender, which is always present
+        update_data = {
+            'gender': request.form.get('gender')
+        }
+
+        # The 'specialty' field is only sent by the form if the user is a doctor.
+        # We can check if the form sent this field.
+        if 'specialty' in request.form:
+            update_data['specialty'] = request.form.get('specialty')
+
+        # Execute the update query in the database
+        supabase.table('users').update(update_data).eq('id', user_id).execute()
+        
+        # Redirect to the dashboard after saving
+        return redirect(url_for('dashboard'))
+    # --- END OF CORRECTED LOGIC ---
+
+    # If just viewing the page (GET request), the logic remains the same
+    user_response = supabase.table('users').select('*').eq('id', user_id).single().execute()
+    user = user_response.data
+    
+    return render_template('profile.html', user=user, specialties=specialties)
+
+# END OF REPLACEMENT BLOCK
+
+
+
 # ADD THESE TWO NEW ROUTES TO APP.PY
 
 @app.route('/drug_guide')
@@ -319,7 +447,91 @@ def drug_detail(drug_id):
     ).neq('id', drug['id']).execute()
     alternatives = alternatives_response.data
 
+
+@app.route('/my_appointments')
+def my_appointments():
+    """Shows the patient their own upcoming and past appointments."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+    
+    user_id = session['user_id']
+    
+    # Fetch all appointments for the logged-in patient, joining with doctor info
+    # The syntax 'doctor:doctor_id(*)' tells Supabase to fetch all columns from the linked doctor
+    appointments_response = supabase.table('appointments').select('*, doctor:doctor_id(*)').eq('patient_id', user_id).order('appointment_time', desc=True).execute()
+    all_appointments = appointments_response.data
+    
+    # Separate appointments into upcoming and past
+    upcoming_appointments = [appt for appt in all_appointments if appt['status'] == 'upcoming']
+    past_appointments = [appt for appt in all_appointments if appt['status'] != 'upcoming']
+    
+    return render_template('my_appointments.html', upcoming=upcoming_appointments, past=past_appointments)
+
+
+@app.route('/find_a_doctor')
+def find_a_doctor():
+    """Shows a list of doctors, sorted by popularity, with filtering."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+        
+    # Call the database function to get the sorted list of doctors
+    doctors_response = supabase.rpc('get_doctors_sorted_by_appointments').execute()
+    doctors = doctors_response.data
+    
+    # Get the list of unique specialties for the filter dropdown
+    specialties = sorted(list(set(doc['specialty'] for doc in doctors if doc['specialty'])))
+
+    return render_template('find_a_doctor.html', doctors=doctors, specialties=specialties) 
     return render_template('drug_detail.html', drug=drug, alternatives=alternatives)
+@app.route('/book_appointment/<doctor_id>', methods=['GET', 'POST'])
+def book_appointment(doctor_id):
+    """
+    Handles the appointment booking process for a specific doctor.
+    This version has the corrected route definition.
+    """
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+
+    patient_id = session['user_id']
+
+    if request.method == 'POST':
+        appt_time_str = request.form.get('appointment_time')
+        if appt_time_str:
+            supabase.table('appointments').insert({
+                'patient_id': patient_id,
+                'doctor_id': doctor_id,
+                'appointment_time': appt_time_str,
+                'status': 'upcoming'
+            }).execute()
+        return redirect(url_for('my_appointments'))
+
+    doctor_response = supabase.table('users').select('*').eq('id', doctor_id).single().execute()
+    doctor = doctor_response.data
+
+    if not doctor or doctor.get('user_type') != 'doctor':
+        return "Doctor not found.", 404
+        
+    return render_template('book_appointment.html', doctor=doctor)
+
+# END OF REPLACEMENT BLOCK
+
+
 if __name__ == '__main__':
     # Set host to '0.0.0.0' to make it accessible on your network
+    
     app.run(debug=True, host='0.0.0.0')
+# ADD THIS BLOCK RIGHT AFTER app = Flask(__name__)
+
+def format_datetime_filter(value):
+    """Jinja2 filter to format a datetime string for display."""
+    if not value:
+        return ""
+    # Parse the ISO format string from Supabase
+    dt_object = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    # Format it into a more readable string
+    return dt_object.strftime('%A, %d %B %Y, %I:%M %p')
+
+# Register the function as a filter with Jinja2
+app.jinja_env.filters['format_datetime'] = format_datetime_filter
+
+# END OF NEW BLOCK

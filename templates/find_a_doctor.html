@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find a Doctor - MediChain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <a href="{{ url_for('my_appointments') }}" class="active"><i data-feather="calendar"></i> Appointments</a>
+                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Find a Doctor</h1>
+            </header>
+            
+            <div class="doctor-list-container">
+                {% for doctor in doctors %}
+                <div class="doctor-card">
+                    <img class="avatar" src="{{ url_for('static', filename='images/others/male_doctor.png') if doctor.gender == 'Male' else url_for('static', filename='images/others/female_doctor.png') }}" alt="Dr. {{ doctor.name }}">
+                    <h3>Dr. {{ doctor.name }}</h3>
+                    <span class="specialty">{{ doctor.specialty or 'General Practice' }}</span>
+                    <a href="{{ url_for('book_appointment', doctor_id=doctor.id) }}" class="btn btn-primary">Book Appointment</a>
+                </div>
+                {% else %}
+                <p>No doctors are currently available.</p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script>feather.replace()</script>
+</body>
+</html>

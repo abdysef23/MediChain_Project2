@@ -2,16 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Your Profile - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Your Profile</h2>
-        <p><strong>Name:</strong> {{ user.name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Role:</strong> {{ user.user_type }}</p>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <!-- We will add the /appointments link in the next phase -->
+                <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
+                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="guide-container">
+                <header class="main-header">
+                    <h1>Your Profile</h1>
+                </header>
+
+                <div class="profile-form-container">
+                    <form method="POST" action="{{ url_for('profile') }}">
+                        <!-- Read-only Fields -->
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" value="{{ user.name }}" readonly disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" value="{{ user.email }}" readonly disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Type</label>
+                            <input type="text" value="{{ user.user_type.capitalize() }}" readonly disabled>
+                        </div>
+
+                        <!-- Editable Fields -->
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Doctor-only Editable Field -->
+                            {% if user.user_type == 'doctor' %}
+                            <div class="form-group">
+                                <label for="specialty">Specialty</label>
+                                <select id="specialty" name="specialty">
+                                    <option value="" disabled {% if not user.specialty %}selected{% endif %}>
+                                        -- Select Your Specialty --
+                                    </option>
+                                    <!-- Loop through the specialties list from the backend -->
+                                    {% for s in specialties %}
+                                        <option value="{{ s }}" {% if user.specialty == s %}selected{% endif %}>
+                                            {{ s }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+
+                        <button type="submit" class="btn btn-primary" style="width: auto; margin-top: 1rem;">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </main>
     </div>
+    <script>
+      feather.replace()
+    </script>
 </body>
 </html>

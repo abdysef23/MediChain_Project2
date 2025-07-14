@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment - MediChain</title>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- NEW: Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <header class="sidebar-header">MediChain</header>
+            <nav>
+                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                <a href="{{ url_for('my_appointments') }}" class="active"><i data-feather="calendar"></i> Appointments</a>
+                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="guide-container">
+                <header class="main-header">
+                    <h1>Book Appointment</h1>
+                </header>
+
+                <div class="booking-container">
+                    <div class="doctor-card-header">
+                        <img class="avatar" src="{{ url_for('static', filename='images/others/male_doctor.png') if doctor.gender == 'Male' else url_for('static', filename='images/others/female_doctor.png') }}" alt="Dr. {{ doctor.name }}">
+                        <div>
+                            <h3>Dr. {{ doctor.name }}</h3>
+                            <span class="specialty">{{ doctor.specialty or 'General Practice' }}</span>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('book_appointment', doctor_id=doctor.id) }}" class="booking-form">
+                        <div class="form-group">
+                            <label for="appointment_time">Select a Date and Time</label>
+                            
+                            <div class="datetime-picker-wrapper">
+                                <i class="icon" data-feather="calendar"></i>
+                                <!-- 
+                                    IMPORTANT CHANGE: The input type is now "text", not "datetime-local".
+                                    This prevents the ugly browser default from appearing.
+                                -->
+                                <input type="text" id="appointment_time_picker" name="appointment_time" placeholder="Click to select a date..." required>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add these scripts at the bottom of the body -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- NEW: Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- NEW: Script to initialize Flatpickr -->
+    <script>
+        // Activate Feather Icons
+        feather.replace();
+
+        // Initialize our custom date picker
+        flatpickr("#appointment_time_picker", {
+            enableTime: true,        // Allows time selection
+            dateFormat: "Y-m-d H:i", // The format that will be sent to the server
+            altInput: true,          // Shows a user-friendly date in the box
+            altFormat: "F j, Y at h:i K", // How the user-friendly date looks
+            minDate: "today"         // Prevents booking in the past
+        });
+    </script>
+</body>
+</html>
