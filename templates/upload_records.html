@@ -23,24 +23,16 @@
                     <form action="{{ url_for('upload_record') }}" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="patient_id" value="{{ patient.id }}">
                         
-                        <!-- Original Form Fields -->
-                        <!-- REPLACE THE ENTIRE <div class="upload-box"> WITH THIS BLOCK -->
+                        <!-- All original form fields -->
                         <div class="upload-box" id="upload-box">
-                            <!-- This input is now hidden, but the label will trigger it -->
                             <input type="file" name="file" id="file-input" required>
-                            
                             <div class="upload-box-content">
                                 <i class="upload-box-icon" data-feather="upload-cloud"></i>
-                                <p>Drag and drop files here</p>
-                                <span>or</span>
-                                <!-- This label acts as our new, styled button -->
+                                <p>Drag and drop files here</p><span>or</span>
                                 <label for="file-input" class="upload-box-label">Choose File</label>
                             </div>
-                            
-                            <!-- This will display the name of the chosen file -->
                             <div id="file-name-display"></div>
                         </div>
-                              <!-- END OF REPLACEMENT BLOCK -->
                         <div class="form-group">
                             <label for="record_name">Record Name</label>
                             <input type="text" id="record_name" name="record_name" placeholder="e.g., Annual Checkup Summary" required>
@@ -59,11 +51,10 @@
                             <textarea id="hints" name="hints" rows="4" placeholder="e.g., Patient reported mild headache..."></textarea>
                         </div>
                         
-                        <!-- NEW, CORRECTED DRUG SECTION -->
+                        <!-- Corrected Drug Section -->
                         <div class="form-group">
                             <label>Prescribed Medications (Optional)</label>
                             <div id="chosen-drugs-list" style="margin-top: 0.5rem;"></div>
-                            <!-- Centering Wrapper for the button -->
                             <div class="add-drug-wrapper">
                                 <button type="button" id="add-drug-btn" class="btn btn-secondary" style="width: auto;">
                                     <i data-feather="plus"></i> Add a Drug
@@ -87,13 +78,13 @@
                 <button type="button" class="modal-close-btn"><i data-feather="x"></i></button>
             </div>
             <div class="modal-body">
-                <!-- Correctly Styled Search Bar -->
                 <div class="search-wrapper">
                     <i class="search-icon" data-feather="search"></i>
                     <input type="search" id="modal-drug-search" placeholder="Search drugs..." autocomplete="off">
                 </div>
                 <div class="drug-list" id="modal-drug-list" style="margin-top: 1rem;">
                     {% for drug in all_drugs %}
+                    <!-- THIS IS THE LINE WITH THE CRITICAL FIX -->
                     <div class="drug-item modal-drug-item" data-drug-id="{{ drug.id }}" data-drug-name="{{ drug.trade_name }}" data-drug-sci-name="{{ drug.scientific_name }}" data-drug-img="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}">
                         <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
                         <div class="drug-info">

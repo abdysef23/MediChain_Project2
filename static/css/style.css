@@ -893,8 +893,8 @@ a {
 /* The main container card for all the details */
 .detail-container {
     width: 100%;
-    max-width: 650px; /* A good width for readability */
-    text-align: left; /* Aligns all text to the left */
+    max-width: 700px;
+    text-align: left;
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     border-radius: 16px;
@@ -912,15 +912,14 @@ a {
 
 .detail-icon-wrapper {
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--bg-tertiary);
     border-radius: 10px;
 }
-
 .detail-icon-wrapper i {
     width: 28px;
     height: 28px;
@@ -934,16 +933,15 @@ a {
     color: var(--text-primary);
 }
 
-/* Metadata section for Classification and Date */
+/* Metadata section (Classification and Date) */
 .detail-meta {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
     border-bottom: 1px solid var(--border-primary);
 }
-
 .detail-meta div strong {
     display: block;
     font-size: 0.9rem;
@@ -951,22 +949,30 @@ a {
     color: var(--text-secondary);
     margin-bottom: 0.25rem;
 }
-
 .detail-meta div span {
     font-size: 1rem;
     color: var(--text-primary);
 }
 
-/* Hints/Notes Section */
-.detail-notes {
+/* Hints/Notes and Prescribed Medications Sections */
+.detail-notes, .prescribed-drugs-section {
     margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
 }
 
-.detail-notes h2 {
+.detail-notes:last-child,
+.prescribed-drugs-section:last-of-type {
+    margin-bottom: 2.5rem; /* Add margin to the last section */
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-notes h2, .prescribed-drugs-section h2 {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text-secondary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -977,17 +983,18 @@ a {
     margin: 0;
 }
 
-/* Action Buttons Section */
+/* THIS IS THE FIX FOR THE BUTTONS */
 .detail-actions {
-    display: flex;
+    display: flex; /* Makes buttons sit side-by-side */
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 0; /* Removed top margin as the sections above handle spacing */
 }
 
 .detail-actions .btn {
-    width: auto;
     flex-grow: 1; /* Makes both buttons equal width */
+    width: auto;
 }
+
 /* --- Drug Guide Styles --- */
 .search-form { display: flex; gap: 1rem; margin-bottom: 2rem; }
 .search-form input { flex-grow: 1; }
@@ -1146,15 +1153,15 @@ a {
 /* This is the new main container for the drug guide page */
 .guide-container {
     width: 100%;
-    max-width: 900px; /* Prevents content from being too wide */
-    margin: 0 auto;    /* Centers the container horizontally */
-    padding-top: 1rem; /* Adds some space at the top */
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 1rem;
 }
 
 /* We'll adjust the main header inside this new container */
 .guide-container .main-header {
-    border-bottom: none; /* Remove the full-width border */
-    text-align: center;  /* Center the "Drug Guide" title */
+    border-bottom: none;
+    text-align: center;
     margin-bottom: 1.5rem;
 }
 
@@ -1796,4 +1803,91 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     border-radius: 8px;
     object-fit: cover;
     flex-shrink: 0; /* Prevents the image from shrinking */
+}
+/* --- NEW: Universal Scrolling for All Drug Lists --- */
+
+/* This targets any drug list container that might overflow */
+.drug-list-container,
+.prescribed-drugs-section .drug-list,
+.modal-body .drug-list {
+    /*
+      Set a maximum height. 400px is a good general value.
+      This means the list can be any height up to 400px.
+    */
+    max-height: 400px;
+
+    /* 
+      Add a vertical scrollbar ONLY if the content inside is taller
+      than the max-height defined above.
+    */
+    overflow-y: auto;
+
+    /* 
+      Adds a little space so the scrollbar doesn't touch the content.
+      Improves the look and feel.
+    */
+    padding-right: 0.5rem;
+}
+
+/* 
+   A small tweak for the modal to make sure the padding is inside
+   the scrollable area correctly.
+*/
+.modal-body {
+    padding-right: 0;
+}/* --- DEFINITIVE FIX FOR MODAL DRUG ITEM LAYOUT --- */
+
+/* 
+  This rule targets the drug items ONLY inside the pop-up modal.
+  It is the missing piece of the puzzle.
+*/
+.modal-drug-item {
+    display: flex;         /* This forces the image and text to be side-by-side. */
+    align-items: center;   /* This vertically centers them. */
+    gap: 1.5rem;           /* This adds space between them. */
+}
+
+/* 
+  This ensures the images inside the modal have the correct size and don't get squished.
+  It was provided before but is included here again for completeness.
+*/
+.modal-drug-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.modal-drug-item .drug-info {
+    flex-grow: 1; /* Allows the text to take up the remaining space */
+}
+
+/* --- FINAL FIX FOR DRUG MODAL ITEM LAYOUT --- */
+
+/*
+  This rule specifically targets any element with the class .drug-item
+  that is inside the container with the ID #modal-drug-list.
+  Using the ID (#) gives this rule high priority and ensures it is not overridden.
+*/
+#modal-drug-list .drug-item {
+    display: flex;        /* ESSENTIAL: Forces side-by-side layout */
+    align-items: center;  /* Vertically aligns the content */
+    gap: 1.5rem;          /* Creates space between the image and text */
+}
+
+/*
+  This rule targets the images inside the modal's drug items to ensure
+  they have the correct size and appearance.
+*/
+#modal-drug-list .drug-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+#modal-drug-list .drug-item .drug-info {
+    flex-grow: 1; /* Allows the text to fill the remaining space */
 }

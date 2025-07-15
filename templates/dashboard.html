@@ -65,24 +65,33 @@
             <!-- Quick Actions Section -->
             <section>
                 <h2 class="section-title">Quick Actions</h2>
-                <div class="quick-actions-container">
-                    <a href="{{ url_for('records') }}" class="action-card">
-                        <div class="icon-wrapper"><i data-feather="file-text"></i></div>
-                        <span>View Records</span>
-                    </a>
-                    <a href="#" class="action-card"> <!-- Link to upload page if you have one for patients -->
-                        <div class="icon-wrapper"><i data-feather="upload"></i></div>
-                        <span>Upload Lab Results</span>
-                    </a>
-                    <a href="#" class="action-card">
-                        <div class="icon-wrapper"><i data-feather="calendar"></i></div>
-                        <span>Appointments</span>
-                    </a>
-                    <a href="{{ url_for('qr_code') }}" class="action-card">
-                        <div class="icon-wrapper"><i data-feather="share-2"></i></div>
-                        <span>Shared with Doctors</span>
-                    </a>
-                </div>
+                <!-- REPLACE THE ENTIRE <div class="quick-actions-container"> WITH THIS BLOCK -->
+
+<div class="quick-actions-container">
+    <a href="{{ url_for('records') }}" class="action-card">
+        <div class="icon-wrapper"><i data-feather="file-text"></i></div>
+        <span>View Records</span>
+    </a>
+
+    <!-- THIS IS THE MODIFIED ACTION CARD -->
+    <a href="{{ url_for('profile') }}" class="action-card">
+        <div class="icon-wrapper"><i data-feather="user"></i></div>
+        <span>My Profile</span>
+    </a>
+    <!-- END OF MODIFICATION -->
+
+    <a href="{{ url_for('my_appointments') }}" class="action-card">
+        <div class="icon-wrapper"><i data-feather="calendar"></i></div>
+        <span>Appointments</span>
+    </a>
+    
+    <a href="{{ url_for('qr_code') }}" class="action-card">
+        <div class="icon-wrapper"><i data-feather="share-2"></i></div>
+        <span>Shared with Doctors</span>
+    </a>
+</div>
+
+<!-- END OF REPLACEMENT BLOCK -->
             </section>
 
         </main>

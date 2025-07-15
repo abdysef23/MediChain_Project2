@@ -1,3 +1,5 @@
+<!-- REPLACE THE ENTIRE CONTENT OF records.html WITH THIS FINAL VERSION -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,13 +15,13 @@
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
-                {% if doctor_view and session.user_id %}
-                <a href="#" class="active"><i data-feather="file-text"></i> Patient Records</a>
-                {% elif not doctor_view and session.user_id %}
-                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
-                <a href="{{ url_for('records') }}" class="active"><i data-feather="file-text"></i> Records</a>
-                <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
-                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+                {% if doctor_view %}
+                    <a href="#" class="active"><i data-feather="file-text"></i> Patient Records</a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                    <a href="{{ url_for('records') }}" class="active"><i data-feather="file-text"></i> Records</a>
+                    <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
+                    <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
                 {% endif %}
             </nav>
             {% if not doctor_view %}
@@ -45,25 +47,27 @@
                 <button class="filter-btn" data-filter="Imaging">Imaging</button>
             </div>
 
-            <div class="records-list">
+            <div class="records-list" id="records-list-container">
                 {% for record in records %}
                 <a href="{{ url_for('record_detail', record_id=record.id) }}" 
                    class="record-item record-item-filterable" 
                    data-classification="{{ record.classification }}">
+                    <!-- THIS IS THE NEW, CORRECTED ICON LOGIC -->
                     <div class="record-icon">
-                        <!-- THIS IS THE NEW ICON LOGIC -->
-                        {% if record.classification == 'Visit Summary' %}
+                        {% set classification = record.classification | lower if record.classification else '' %}
+                        {% if classification == 'visit summary' %}
                             <i data-feather="clipboard"></i>
-                        {% elif record.classification == 'Lab Results' %}
-                            <i data-feather="beaker"></i>
-                        {% elif record.classification == 'Vaccination' %}
+                        {% elif classification == 'lab results' %}
+                            <i data-feather="droplet"></i>  <!-- THIS IS THE FIX: A reliable icon -->
+                        {% elif classification == 'vaccination' %}
                             <i data-feather="shield"></i>
-                        {% elif record.classification == 'Imaging' %}
+                        {% elif classification == 'imaging' %}
                             <i data-feather="camera"></i>
                         {% else %}
                             <i data-feather="file-text"></i>
                         {% endif %}
                     </div>
+<!-- END OF CORRECTION -->
                     <div class="record-info">
                         <strong>{{ record.file_name }}</strong>
                         <span>{{ record.classification | default('Document', true) }}</span>
@@ -71,15 +75,14 @@
                     <div class="record-date">{{ record.uploaded_at.split('T')[0] }}</div>
                 </a>
                 {% else %}
-                <div class="record-item-empty">
-                    <p>No records found for this patient.</p>
+                <div class="no-results-message">
+                    <p>You have no medical records yet.</p>
                 </div>
                 {% endfor %}
             </div>
         </main>
     </div>
-
-    <!-- Script to activate icons and filtering -->
+    <!-- THIS IS THE CRITICAL SCRIPT THAT WAS MISSING -->
     <script>
       feather.replace()
     </script>

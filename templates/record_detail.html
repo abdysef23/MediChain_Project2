@@ -49,24 +49,28 @@
                     </div>
                     {% endif %}
 
-                    <!-- NEW: Prescribed Medications Section -->
-                    {% if prescribed_drugs %}
+                    <!-- THIS IS THE CORRECTED PRESCRIBED MEDICATIONS SECTION -->
                     <div class="prescribed-drugs-section">
                         <h2>Prescribed Medications</h2>
-                        <div class="drug-list">
-                            {% for drug in prescribed_drugs %}
-                            <a href="{{ url_for('drug_detail', drug_id=drug.id) }}" class="drug-item">
-                                <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
-                                <div class="drug-info">
-                                    <strong>{{ drug.trade_name }}</strong>
-                                    <span>{{ drug.scientific_name }}</span>
-                                </div>
-                            </a>
-                            {% endfor %}
-                        </div>
+                        {% if prescribed_drugs %}
+                            <div class="drug-list">
+                                {% for drug in prescribed_drugs %}
+                                <a href="{{ url_for('drug_detail', drug_id=drug.id) }}" class="drug-item">
+                                    <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
+                                    <div class="drug-info">
+                                        <strong>{{ drug.trade_name }}</strong>
+                                        <span>{{ drug.scientific_name }}</span>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- This message will show if the list is empty -->
+                            <div class="no-results-message" style="padding: 1.5rem; text-align: left;">
+                                <p style="margin: 0;">No medications were prescribed for this record.</p>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                    <!-- END OF NEW SECTION -->
     
                     <div class="detail-actions">
                         <a href="{{ record.file_url }}" target="_blank" class="btn btn-secondary"><i data-feather="eye"></i> Preview File</a>
