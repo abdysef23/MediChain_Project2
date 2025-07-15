@@ -4,6 +4,7 @@ from supabase import create_client, Client
 import uuid
 from dotenv import load_dotenv # Used to load environment variables
 from datetime import datetime
+import traceback
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -65,44 +66,51 @@ def auth():
     return render_template('auth.html')
 
 
+# REPLACE THE ENTIRE signup FUNCTION WITH THIS CORRECTED BLOCK
+
 @app.route('/signup', methods=['POST'])
 def signup():
-    """Handles user registration."""
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    user_type = data.get('user_type')
-    name = data.get('name')
-
-    if not all([email, password, user_type, name]):
-        return jsonify({"message": "Missing required fields"}), 400
-
+    """
+    Handles user registration by passing all data to Supabase Auth.
+    A database trigger will automatically create the user profile.
+    """
     try:
-        # Create user in Supabase Auth
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        user_type = data.get('user_type')
+        name = data.get('name')
+
+        if not all([email, password, user_type, name]):
+            return jsonify({"message": "Missing required fields"}), 400
+
+        # This is the correct way to sign up. It passes the name and user_type
+        # as metadata, which our database trigger will use.
+        # It does NOT try to insert into the 'users' table manually.
         res = supabase.auth.sign_up({
             "email": email,
             "password": password,
+            "options": {
+                "data": {
+                    'name': name,
+                    'user_type': user_type
+                }
+            }
         })
-        
-        # Get the user ID from the successful auth response
-        user_id = res.user.id
 
-        # Insert additional user info into the 'users' table
-        qr_id = str(uuid.uuid4())
-        user_data = {
-            "id": user_id,
-            "email": email,
-            "name": name,
-            "user_type": user_type,
-            "qr_id": qr_id
-        }
-        supabase.table('users').insert(user_data).execute()
-
-        return jsonify({"message": "User created successfully"}), 201
+        # If the signup is successful, we just return a success message.
+        return jsonify({"message": "User created successfully. Please log in."}), 201
 
     except Exception as e:
-        # Provide a more specific error message
-        return jsonify({"message": f"Error during sign-up: {e}"}), 500
+        # This catches errors from Supabase (like "User already registered")
+        # and returns them as a clear message instead of crashing the server.
+        # You can see this message in your browser's developer console.
+        error_message = str(e)
+        print(f"SIGNUP ERROR: {error_message}") # Print the real error to your Flask console
+        return jsonify({"message": error_message}), 400
+
+# END OF REPLACEMENT BLOCK
+
 
 @app.route('/login', methods=['POST'])
 def login():
