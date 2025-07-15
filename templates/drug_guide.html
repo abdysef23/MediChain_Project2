@@ -8,17 +8,26 @@
 </head>
 <body>
     <div class="layout-wrapper">
-        <aside class="sidebar">
-            <header class="sidebar-header">MediChain</header>
-            <nav>
-                <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
-                <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
-                <a href="{{ url_for('drug_guide') }}" class="active"><i data-feather="book-open"></i> Drug Guide</a>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
-            </div>
-        </aside>
+        <!-- REPLACE THE ENTIRE <aside> BLOCK WITH THIS -->
+            <aside class="sidebar">
+                <header class="sidebar-header">MediChain</header>
+                <nav>
+                    <!-- If the user is a doctor, show their specific sidebar -->
+                    {% if user.user_type == 'doctor' %}
+                        <a href="{{ url_for('dashboard') }}"><i data-feather="grid"></i> Dashboard</a>
+                        <a href="{{ url_for('drug_guide') }}" class="active"><i data-feather="book-open"></i> Drug Guide</a>
+                    <!-- Otherwise, show the patient sidebar -->
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                        <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                        <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
+                        <a href="{{ url_for('drug_guide') }}" class="active"><i data-feather="book-open"></i> Drug Guide</a>
+                    {% endif %}
+                </nav>
+                <div class="sidebar-footer">
+                    <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
+                </div>
+            </aside>
 
         <main class="main-content">
             <div class="guide-container">

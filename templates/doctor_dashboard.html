@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="layout-wrapper">
-        <!-- Doctor's Sidebar -->
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
@@ -22,32 +21,36 @@
 
         <main class="main-content">
             <div class="guide-container">
-                <header class="main-header">
+                <header class="main-header" style="text-align: left; border-bottom: 1px solid var(--border-primary);">
                     <h1>Upcoming Appointments</h1>
                 </header>
     
-                <div class="appointment-list">
-                    {% for appt in appointments %}
-                    <div class="appointment-card">
-                        <div class="appt-info">
-                            <span class="appt-date">{{ appt.appointment_time | format_datetime }}</span>
-                            <h3 class="doctor-name">{{ appt.patient.name }}</h3>
-                            <span class="clinic-info">Patient</span>
-                            
-                            <!-- This form is the "Mark as Complete" button -->
-                            <form action="{{ url_for('complete_appointment', appointment_id=appt.id) }}" method="POST" style="margin-top: 1rem;">
-                                <button type="submit" class="btn btn-secondary btn-sm">
-                                    <i data-feather="check-square"></i> Mark as Complete
-                                </button>
-                            </form>
+                <!-- This is the corrected list display -->
+                <div class="appointment-list active">
+                    {% if appointments %}
+                        {% for appt in appointments %}
+                        <div class="appointment-card">
+                            <div class="appt-info">
+                                <span class="appt-date">{{ appt.appointment_time | format_datetime }}</span>
+                                <h3 class="doctor-name">{{ appt.patient.name }}</h3>
+                                <span class="clinic-info">Patient</span>
+                                
+                                <form action="{{ url_for('complete_appointment', appointment_id=appt.id) }}" method="POST" style="margin-top: 1rem;">
+                                    <button type="submit" class="btn btn-secondary btn-sm">
+                                        <i data-feather="check-square"></i> Mark as Complete
+                                    </button>
+                                </form>
+                            </div>
+                            <!-- Updated to use a generic avatar if gender is not set -->
+                            <img class="doctor-avatar" src="{{ url_for('static', filename='images/others/female_doctor.png') if appt.patient.gender == 'Female' else url_for('static', filename='images/others/male_doctor.png') }}" alt="Patient Avatar">
                         </div>
-                        <img class="doctor-avatar" src="{{ url_for('static', filename='images/others/male_doctor.png') if appt.patient.gender == 'Male' else url_for('static', filename='images/others/female_doctor.png') }}" alt="Patient Avatar">
-                    </div>
+                        {% endfor %}
                     {% else %}
-                    <div class="no-results-message">
-                        <p>You have no upcoming appointments.</p>
-                    </div>
-                    {% endfor %}
+                        <!-- This is the corrected "No Results" message -->
+                        <div class="no-results-message">
+                            <p>You have no upcoming appointments.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </main>

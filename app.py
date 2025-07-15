@@ -406,46 +406,47 @@ def profile():
 
 # ADD THESE TWO NEW ROUTES TO APP.PY
 
+# REPLACE THE EXISTING drug_guide FUNCTION
 @app.route('/drug_guide')
 def drug_guide():
     """Renders the main Drug Guide page and handles search."""
     if 'user_id' not in session:
         return redirect(url_for('auth'))
 
-    query = request.args.get('q', '') # Get search query from URL, if present
+    user_id = session['user_id']
+    user = supabase.table('users').select('*').eq('id', user_id).single().execute().data
     
-    # If there is a search query, filter the results
+    query = request.args.get('q', '')
     if query:
-        # Search in both trade name and scientific name
-        drugs_response = supabase.table('drugs').select('*').or_(
-            f'trade_name.ilike.%{query}%,scientific_name.ilike.%{query}%'
-        ).execute()
+        drugs_response = supabase.table('drugs').select('*').or_(f'trade_name.ilike.%{query}%,scientific_name.ilike.%{query}%').execute()
     else:
-        # Otherwise, fetch all drugs
         drugs_response = supabase.table('drugs').select('*').order('trade_name').execute()
         
     drugs = drugs_response.data
-    return render_template('drug_guide.html', drugs=drugs, search_query=query)
+    return render_template('drug_guide.html', drugs=drugs, search_query=query, user=user)
 
 
+# REPLACE THE EXISTING drug_detail FUNCTION
 @app.route('/drug/<int:drug_id>')
 def drug_detail(drug_id):
     """Renders the detailed page for a single drug."""
     if 'user_id' not in session:
         return redirect(url_for('auth'))
 
-    # Fetch the selected drug's details
+    user_id = session['user_id']
+    user = supabase.table('users').select('*').eq('id', user_id).single().execute().data
+
     drug_response = supabase.table('drugs').select('*').eq('id', drug_id).single().execute()
     drug = drug_response.data
-
     if not drug:
         return "Drug not found", 404
 
-    # Fetch alternatives (drugs with the same scientific name but different trade name)
-    alternatives_response = supabase.table('drugs').select('*').eq(
-        'scientific_name', drug['scientific_name']
-    ).neq('id', drug['id']).execute()
+    alternatives_response = supabase.table('drugs').select('*').eq('scientific_name', drug['scientific_name']).neq('id', drug['id']).execute()
     alternatives = alternatives_response.data
+
+    return render_template('drug_detail.html', drug=drug, alternatives=alternatives, user=user)
+
+
 
 
 @app.route('/my_appointments')
