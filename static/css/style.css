@@ -1891,3 +1891,32 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 #modal-drug-list .drug-item .drug-info {
     flex-grow: 1; /* Allows the text to fill the remaining space */
 }
+/* --- NEW: Logo Styling --- */
+
+/* Landing Page Logo */
+.landing-logo {
+    max-width: 120px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Sidebar Header and Logo */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-left: 0; /* Remove previous padding to align with nav items */
+}
+
+.sidebar-logo {
+    width: 36px;  /* Adjust size as needed */
+    height: 36px;
+}
+.main-content {
+  scrollbar-width: none;
+}
+
+/* For WebKit browsers like Chrome, Safari, and Edge */
+.main-content::-webkit-scrollbar {
+  display: none;
+}
