@@ -1,33 +1,4 @@
-# Flask is the core web framework
-Flask==3.0.3
-
-# Library for interacting with the Supabase backend
-supabase-py==2.4.2
-
-# Used to load environment variables from the .env file
-python-dotenv==1.0.1
-
-# Gunicorn is a production-ready web server (optional but highly recommended for deployment)
-gunicorn==22.0.0
-
-
-/MediChain_project
-|-- /static/
-|   |-- /css/
-|       |-- style.css
-|   |-- /js/
-|       |-- main.js
-|
-|-- /templates/
-|   |-- dashboard.html
-|   |-- index.html
-|   |-- qr_code.html
-|   |-- record_detail.html
-|   |-- records.html
-|   |-- upload_records.html
-|
-|-- app.py                 # Your main application file
-|
-|-- requirements.txt       # The list of libraries to install
-|
-|-- .env                   # IMPORTANT: Your secret keys!
+Flask
+supabase-py
+python-dotenv
+gunicorn
