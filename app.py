@@ -138,37 +138,33 @@ def logout():
     session.clear() # Removes all data from the session
     return redirect(url_for('index'))
 
-@app.route('/record/<record_id>')
+# THIS IS THE FINAL AND CORRECT RECORD_DETAIL FUNCTION
+
+@app.route('/record/<string:record_id>')
 def record_detail(record_id):
-    """
-    Displays the details for a single medical record.
-    This version is accessible by anyone with the direct link (i.e., the doctor or patient).
-    """
-    try:
-        # Step 1: Fetch the specific record by its ID.
-        record_response = supabase.table('files').select('*').eq('id', record_id).single().execute()
-        record = record_response.data
+    """Displays details for a single record, including prescribed drugs."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
 
-        # Step 2: If no record exists with that ID, show a "not found" error.
-        if not record:
-            return "Error: A record with this ID could not be found.", 404
-            
-        # Step 3: Determine the file type (PDF or image) to show the correct icon.
-        file_type = 'image' if record.get('file_name', '').lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) else 'pdf'
+    user_id = session['user_id']
+    user = supabase.table('users').select('*').eq('id', user_id).single().execute().data
+    if not user:
+        return redirect(url_for('auth'))
 
-        # Step 4: Render the detail page with the record's data.
-        # Note: The strict security check has been removed to allow doctor access.
-        return render_template('record_detail.html', record=record, file_type=file_type)
+    # Fetch the main record details
+    record_response = supabase.table('files').select('*').eq('id', record_id).single().execute()
+    record = record_response.data
+    if not record:
+        return "Record not found", 404
 
-    except Exception as e:
-        return f"An error occurred while loading the record: {str(e)}", 500
+    # Fetch the prescribed drugs linked to this record
+    prescriptions_response = supabase.table('record_prescriptions').select('*, drug:drugs(*)').eq('record_id', record_id).execute()
+    prescribed_drugs = [p['drug'] for p in prescriptions_response.data]
 
-# REPLACE THE EXISTING dashboard FUNCTION WITH THIS NEW VERSION
+    # Determine the file type for the icon
+    file_type = 'image' if record.get('file_name', '').lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) else 'pdf'
 
-# REPLACE THE ENTIRE dashboard FUNCTION WITH THIS CORRECTED BLOCK
-
-# REPLACE THE ENTIRE dashboard FUNCTION WITH THIS DEBUGGING BLOCK
-
+    return render_template('record_detail.html', record=record, file_type=file_type, prescribed_drugs=prescribed_drugs, user=user)
 @app.route('/dashboard')
 def dashboard():
     """
@@ -311,48 +307,67 @@ def doctor_view(qr_id):
 
 @app.route('/upload_page/<patient_id>')
 def upload_page(patient_id):
-    """Renders the dedicated drag-and-drop upload page for doctors."""
-    # We fetch the patient's info just to display their name on the upload page
-    patient = supabase.table('users').select('id, name').eq('id', patient_id).single().execute().data
-    return render_template('upload_records.html', patient=patient)
+    """Renders the upload page and provides a list of all drugs."""
+    patient_response = supabase.table('users').select('id, name, qr_id').eq('id', patient_id).single().execute()
+    patient = patient_response.data
+    
+    # Fetch all drugs to populate the dropdown
+    drugs_response = supabase.table('drugs').select('id, trade_name').order('trade_name').execute()
+    all_drugs = drugs_response.data
+    
+    return render_template('upload_records.html', patient=patient, all_drugs=all_drugs)
 
 # END OF THE NEW FUNCTION BLOCK
+# REPLACE THE ENTIRE upload_record FUNCTION WITH THIS CORRECTED BLOCK
+
+# THIS IS THE FINAL AND CORRECT UPLOAD_RECORD FUNCTION
+
 @app.route('/upload_record', methods=['POST'])
 def upload_record():
-    """SECURED: Ensures only a logged-in doctor can upload records."""
-    # Security Check: Must be a logged-in doctor to submit a record
-    if 'user_id' not in session:
-        return jsonify({"message": "Unauthorized: Please log in."}), 401
-
-    doctor_id = session['user_id']
-    doctor_info = supabase.table('users').select('user_type').eq('id', doctor_id).single().execute().data
-    if not doctor_info or doctor_info.get('user_type') != 'doctor':
-        return jsonify({"message": "Permission Denied: Not a doctor."}), 403
-
-    # If security checks pass, proceed with the upload
-    if 'file' not in request.files or request.files['file'].filename == '':
-        return jsonify({"message": "No file selected"}), 400
-
-    file = request.files['file']
-    patient_id = request.form.get('patient_id')
-    record_name = request.form.get('record_name')
-    classification = request.form.get('classification')
-    hints = request.form.get('hints')
-
-    if not all([patient_id, record_name, classification]):
-        return jsonify({"message": "Missing required fields"}), 400
-
+    """Handles file upload and linking prescribed drugs."""
     try:
+        file = request.files.get('file')
+        patient_id = request.form.get('patient_id')
+        record_name = request.form.get('record_name')
+        classification = request.form.get('classification')
+        hints = request.form.get('hints')
+        prescribed_drug_ids = request.form.getlist('prescribed_drugs')
+
+        if not all([patient_id, record_name, classification, file]):
+            return jsonify({"message": "Missing required fields"}), 400
+
+        # --- File Upload Logic ---
         file_path = f"{patient_id}/{uuid.uuid4()}-{file.filename}"
-        supabase.storage.from_('medical-records').upload(file=file.read(), path=file_path, file_options={"content-type": file.content_type})
+        supabase.storage.from_('medical-records').upload(
+            file=file.read(),
+            path=file_path,
+            file_options={"content-type": file.content_type}
+        )
         file_url = supabase.storage.from_('medical-records').get_public_url(file_path)
-        supabase.table('files').insert({"user_id": patient_id, "file_name": record_name, "file_url": file_url, "classification": classification, "hints": hints}).execute()
+
+        # --- Database Insertion Logic ---
+        new_record_response = supabase.table('files').insert({
+            "user_id": patient_id, "file_name": record_name, "file_url": file_url,
+            "classification": classification, "hints": hints
+        }).execute()
+        new_record_id = new_record_response.data[0]['id']
+
+        if new_record_id and prescribed_drug_ids:
+            prescriptions_to_insert = [
+                {'record_id': new_record_id, 'drug_id': drug_id}
+                for drug_id in prescribed_drug_ids
+            ]
+            supabase.table('record_prescriptions').insert(prescriptions_to_insert).execute()
+        
+        # --- Redirect Logic ---
         patient_qr_response = supabase.table('users').select('qr_id').eq('id', patient_id).single().execute()
         patient_qr_id = patient_qr_response.data.get('qr_id')
-        return redirect(url_for('doctor_view', qr_id=patient_qr_id))
-    except Exception as e:
-        return jsonify({"message": f"An error occurred during upload: {str(e)}"}), 500
 
+        return redirect(url_for('doctor_view', qr_id=patient_qr_id))
+
+    except Exception as e:
+        print(f"AN ERROR OCCURRED during upload: {e}")
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 500
 
 def auth():
     return render_template('auth.html')

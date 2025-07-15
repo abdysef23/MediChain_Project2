@@ -800,27 +800,83 @@ a {
     color: var(--text-primary);
 }
 
+/* --- ENHANCED: Upload Box Styling --- */
+
+/* The main dashed container */
 .upload-box {
     border: 2px dashed var(--border-primary);
     border-radius: 12px;
-    padding: 2rem;
+    padding: 2.5rem; /* Increased padding */
     text-align: center;
-    background-color: var(--bg-primary);
+    background-color: var(--bg-primary); /* Darker background */
     margin-bottom: 2rem;
-    transition: border-color var(--transition-speed);
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
+    cursor: pointer;
 }
 
-.upload-box:hover {
+/* Visual feedback for when a file is dragged over */
+.upload-box.is-dragover {
     border-color: var(--primary-blue);
+    background-color: var(--bg-tertiary);
+}
+
+/* A new container for the icon and text to keep them together */
+.upload-box-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    pointer-events: none; /* Allows clicks to go through to the hidden input */
+}
+
+/* The upload icon */
+.upload-box-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--text-secondary);
 }
 
 .upload-box p {
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
+    color: var(--text-primary);
 }
 
 .upload-box span {
     color: var(--text-secondary);
+}
+
+/* Hide the ugly, default file input button */
+.upload-box input[type="file"] {
+    display: none;
+}
+
+/* This is the new styled "button" that the user sees */
+.upload-box-label {
+    margin-top: 1rem;
+    display: inline-block;
+    padding: 0.6rem 1.25rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.upload-box-label:hover {
+    background-color: #2a2f37;
+     /* Slightly lighter on hover */
+}
+
+/* A span to display the name of the chosen file */
+#file-name-display {
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-style: italic;
 }
 
 /* === Record Detail Page Styling (Definitive Fix) === */
@@ -1565,4 +1621,179 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     background-color: var(--bg-secondary);
     border: 1px dashed var(--border-primary);
     border-radius: 12px;
+}
+/* --- Prescribed Drugs Section Styling --- */
+.prescribed-drugs-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+}
+.prescribed-drugs-section h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+/* --- NEW: Drug Selector Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.modal-header h3 { margin: 0; font-size: 1.25rem; }
+.modal-close-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; }
+.modal-body {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+/* Style the search bar inside the modal */
+.modal-body .search-wrapper { margin-bottom: 1rem; }
+.modal-footer {
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Drug item styling inside the modal */
+.modal-drug-item {
+    cursor: pointer;
+    border-color: var(--border-primary);
+}
+.modal-drug-item.selected {
+    border-color: var(--primary-blue) !important;
+    box-shadow: 0 0 0 2px var(--primary-blue);
+}
+
+/* Styling for the display of chosen drugs on the main page */
+#chosen-drugs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.form-group .add-drug-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* This targets the search bar specifically inside the modal */
+.modal-container .search-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.modal-container .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.modal-container input[type="search"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem 0.85rem 3rem; /* Left padding for icon */
+    background-color: var(--bg-primary); /* Darker background */
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+}
+
+.modal-container input[type="search"]:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Ensure the image in the modal's drug list is styled correctly */
+.modal-drug-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+/* --- DEFINITIVE STYLING FOR UPLOAD PAGE & DRUG MODAL --- */
+
+/* This new rule will center the 'Add a Drug' button */
+.form-group .add-drug-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* This styles the search bar inside the modal to match the Drug Guide page */
+.modal-container .search-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.modal-container .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.modal-container input[type="search"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem 0.85rem 3rem; /* Left padding for icon */
+    background-color: var(--bg-primary); /* Darker background for contrast */
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+}
+
+.modal-container input[type="search"]:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* THIS IS THE FIX FOR THE MISSING IMAGES */
+/* It ensures the images in the modal have a size and don't get squished */
+.modal-drug-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0; /* Prevents the image from shrinking */
 }

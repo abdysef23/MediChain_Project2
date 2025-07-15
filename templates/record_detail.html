@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Details - MediChain</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
     <div class="layout-wrapper">
-        <!-- Patient Sidebar -->
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
@@ -23,7 +21,6 @@
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="detail-container">
@@ -41,14 +38,8 @@
                     </div>
 
                     <div class="detail-meta">
-                        <div>
-                            <strong>Classification</strong>
-                            <span>{{ record.classification }}</span>
-                        </div>
-                        <div>
-                            <strong>Uploaded On</strong>
-                            <span>{{ record.uploaded_at.split('T')[0] }}</span>
-                        </div>
+                        <div><strong>Classification</strong><span>{{ record.classification }}</span></div>
+                        <div><strong>Uploaded On</strong><span>{{ record.uploaded_at.split('T')[0] }}</span></div>
                     </div>
     
                     {% if record.hints %}
@@ -57,16 +48,30 @@
                         <p>{{ record.hints }}</p>
                     </div>
                     {% endif %}
+
+                    <!-- NEW: Prescribed Medications Section -->
+                    {% if prescribed_drugs %}
+                    <div class="prescribed-drugs-section">
+                        <h2>Prescribed Medications</h2>
+                        <div class="drug-list">
+                            {% for drug in prescribed_drugs %}
+                            <a href="{{ url_for('drug_detail', drug_id=drug.id) }}" class="drug-item">
+                                <img src="{{ url_for('static', filename='images/drugs/' + drug.image_url) if drug.image_url else 'https://via.placeholder.com/50' }}" alt="{{ drug.trade_name }}">
+                                <div class="drug-info">
+                                    <strong>{{ drug.trade_name }}</strong>
+                                    <span>{{ drug.scientific_name }}</span>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- END OF NEW SECTION -->
     
                     <div class="detail-actions">
-                        <a href="{{ record.file_url }}" target="_blank" class="btn btn-secondary">
-                            <i data-feather="eye"></i> Preview File
-                        </a>
-                        <a href="{{ record.file_url }}" download class="btn btn-primary">
-                            <i data-feather="download"></i> Download File
-                        </a>
+                        <a href="{{ record.file_url }}" target="_blank" class="btn btn-secondary"><i data-feather="eye"></i> Preview File</a>
+                        <a href="{{ record.file_url }}" download class="btn btn-primary"><i data-feather="download"></i> Download File</a>
                     </div>
-
                 </div>
             </div>
         </main>
