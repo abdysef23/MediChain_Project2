@@ -1920,3 +1920,55 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .main-content::-webkit-scrollbar {
   display: none;
 }
+/* --- NEW: Modern Doctor Filter Styling --- */
+
+/* The container for the entire filter section */
+.doctor-filter-container {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+/* The scrollable area for the tags */
+.specialty-filter-bar {
+    display: flex;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto; /* Makes it horizontally scrollable on small screens */
+    -ms-overflow-style: none;  /* Hides scrollbar on IE and Edge */
+    scrollbar-width: none;  /* Hides scrollbar on Firefox */
+}
+/* Hides scrollbar on Chrome, Safari, and Opera */
+.specialty-filter-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Styling for each individual specialty tag */
+.specialty-tag {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px; /* Pill shape */
+    font-weight: 600;
+    white-space: nowrap; /* Prevents text from wrapping */
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.specialty-tag:hover {
+    border-color: var(--primary-blue);
+    color: var(--text-primary);
+}
+
+/* The style for the currently selected tag */
+.specialty-tag.active {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: var(--white);
+}
+
+/* This adds a smooth fade-in/out transition to the doctor cards when filtering */
+.doctor-card {
+    transition: all 0.4s ease;
+}

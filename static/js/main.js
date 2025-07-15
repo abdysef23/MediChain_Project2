@@ -303,3 +303,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+// --- NEW: Doctor Specialty Filtering Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const filterTags = document.querySelectorAll('.specialty-tag');
+    const doctorCards = document.querySelectorAll('.doctor-card');
+
+    if (filterTags.length === 0) return; // Only run this on the find-a-doctor page
+
+    filterTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const selectedSpecialty = tag.dataset.specialty;
+
+            // Update the active button state
+            filterTags.forEach(t => t.classList.remove('active'));
+            tag.classList.add('active');
+
+            // Loop through all doctor cards and filter them
+            doctorCards.forEach(card => {
+                const cardSpecialty = card.dataset.specialty;
+                
+                // Set initial state for animation
+                card.style.transform = 'scale(0.95)';
+                card.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Show or hide the card
+                    if (selectedSpecialty === 'all' || cardSpecialty === selectedSpecialty) {
+                        card.style.display = 'block';
+                        // Trigger fade-in animation
+                        setTimeout(() => {
+                            card.style.transform = 'scale(1)';
+                            card.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }, 200); // Wait for fade-out before changing display
+            });
+        });
+    });
+});

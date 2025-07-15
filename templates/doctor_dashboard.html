@@ -11,9 +11,11 @@
         <aside class="sidebar">
             <header class="sidebar-header">MediChain</header>
             <nav>
-                <a href="{{ url_for('dashboard') }}" class="active"><i data-feather="grid"></i> Dashboard</a>
-                <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
-            </nav>
+    <a href="{{ url_for('dashboard') }}" class="active"><i data-feather="grid"></i> Dashboard</a>
+    <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+    <!-- NEW: Profile link for the doctor -->
+    <a href="{{ url_for('profile') }}"><i data-feather="user"></i> My Profile</a>
+</nav>
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
             </div>

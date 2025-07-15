@@ -498,15 +498,23 @@ def find_a_doctor():
     if 'user_id' not in session:
         return redirect(url_for('auth'))
         
-    # Call the database function to get the sorted list of doctors
-    doctors_response = supabase.rpc('get_doctors_sorted_by_appointments').execute()
-    doctors = doctors_response.data
-    
-    # Get the list of unique specialties for the filter dropdown
-    specialties = sorted(list(set(doc['specialty'] for doc in doctors if doc['specialty'])))
+    try:
+        # Call the database function to get the sorted list of doctors
+        doctors_response = supabase.rpc('get_doctors_sorted_by_appointments').execute()
+        doctors = doctors_response.data
+        
+        # THIS IS THE CORRECTED LOGIC FOR GETTING SPECIALTIES
+        # It handles cases where a specialty might be None or an empty string
+        all_specialties = [doc['specialty'] for doc in doctors if doc.get('specialty')]
+        # Get a unique, sorted list of the specialties
+        unique_specialties = sorted(list(set(all_specialties)))
 
-    return render_template('find_a_doctor.html', doctors=doctors, specialties=specialties) 
-    return render_template('drug_detail.html', drug=drug, alternatives=alternatives)
+        return render_template('find_a_doctor.html', doctors=doctors, specialties=unique_specialties)
+        
+    except Exception as e:
+        print(f"Error fetching doctors: {e}")
+        return "Could not load doctor list.", 500
+
 @app.route('/book_appointment/<doctor_id>', methods=['GET', 'POST'])
 def book_appointment(doctor_id):
     """

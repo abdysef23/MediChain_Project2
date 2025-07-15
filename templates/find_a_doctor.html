@@ -9,7 +9,10 @@
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
-            <header class="sidebar-header">MediChain</header>
+            <header class="sidebar-header">
+                <img src="{{ url_for('static', filename='images/logo/logo-transparent.png') }}" alt="Logo" class="sidebar-logo">
+                <span>MediChain</span>
+            </header>
             <nav>
                 <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
                 <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
@@ -19,24 +22,38 @@
         </aside>
 
         <main class="main-content">
-            <header class="main-header">
-                <h1>Find a Doctor</h1>
-            </header>
-            
-            <div class="doctor-list-container">
-                {% for doctor in doctors %}
-                <div class="doctor-card">
-                    <img class="avatar" src="{{ url_for('static', filename='images/others/male_doctor.png') if doctor.gender == 'Male' else url_for('static', filename='images/others/female_doctor.png') }}" alt="Dr. {{ doctor.name }}">
-                    <h3>Dr. {{ doctor.name }}</h3>
-                    <span class="specialty">{{ doctor.specialty or 'General Practice' }}</span>
-                    <a href="{{ url_for('book_appointment', doctor_id=doctor.id) }}" class="btn btn-primary">Book Appointment</a>
+            <div class="guide-container">
+                <header class="main-header">
+                    <h1>Find a Doctor</h1>
+                </header>
+
+                <!-- THIS IS THE NEW FILTER BAR -->
+                <div class="doctor-filter-container">
+                    <div class="specialty-filter-bar">
+                        <button class="specialty-tag active" data-specialty="all">All</button>
+                        {% for specialty in specialties %}
+                            <button class="specialty-tag" data-specialty="{{ specialty }}">{{ specialty }}</button>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% else %}
-                <p>No doctors are currently available.</p>
-                {% endfor %}
+                
+                <div class="doctor-list-container">
+                    {% for doctor in doctors %}
+                    <!-- Added a data-specialty attribute to each card -->
+                    <div class="doctor-card" data-specialty="{{ doctor.specialty or 'General Practice' }}">
+                        <img class="avatar" src="{{ url_for('static', filename='images/others/male_doctor.png') if doctor.gender == 'Male' else url_for('static', filename='images/others/female_doctor.png') }}" alt="Dr. {{ doctor.name }}">
+                        <h3>Dr. {{ doctor.name }}</h3>
+                        <span class="specialty">{{ doctor.specialty or 'General Practice' }}</span>
+                        <a href="{{ url_for('book_appointment', doctor_id=doctor.id) }}" class="btn btn-primary">Book Appointment</a>
+                    </div>
+                    {% else %}
+                    <p>No doctors are currently available.</p>
+                    {% endfor %}
+                </div>
             </div>
         </main>
     </div>
     <script>feather.replace()</script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
