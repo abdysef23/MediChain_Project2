@@ -400,17 +400,23 @@ def profile():
 
     # --- THIS IS THE CORRECTED LOGIC FOR SAVING DATA ---
     if request.method == 'POST':
-        # Prepare the data dictionary with the gender, which is always present
+        # Get all the form data
+        gender = request.form.get('gender')
+        specialty = request.form.get('specialty')
+        location = request.form.get('location') # Get the new location data
+
+        # Prepare the data dictionary to be sent to Supabase
         update_data = {
-            'gender': request.form.get('gender')
+            'gender': gender
         }
 
-        # The 'specialty' field is only sent by the form if the user is a doctor.
-        # We can check if the form sent this field.
-        if 'specialty' in request.form:
-            update_data['specialty'] = request.form.get('specialty')
+        # Check if the optional doctor fields were submitted
+        if specialty is not None:
+            update_data['specialty'] = specialty
+        if location is not None:
+            update_data['location'] = location
 
-        # Execute the update query in the database
+        # Execute the update query
         supabase.table('users').update(update_data).eq('id', user_id).execute()
         
         # Redirect to the dashboard after saving
@@ -544,7 +550,28 @@ def book_appointment(doctor_id):
         return "Doctor not found.", 404
         
     return render_template('book_appointment.html', doctor=doctor)
+# ADD THIS NEW ROUTE TO APP.PY
 
+@app.route('/appointment/<int:appointment_id>')
+def appointment_detail(appointment_id):
+    """Shows the details for a single appointment."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+
+    user_id = session['user_id']
+    
+    # Fetch the appointment, joining doctor details in one go
+    appt_response = supabase.table('appointments').select('*, doctor:doctor_id(*)') \
+        .eq('id', appointment_id) \
+        .single().execute()
+    
+    appointment = appt_response.data
+    
+    # Security check: Make sure the logged-in user is the patient for this appointment
+    if not appointment or appointment['patient_id'] != user_id:
+        return "Appointment not found or you do not have permission to view it.", 404
+        
+    return render_template('appointment_detail.html', appointment=appointment)
 # END OF REPLACEMENT BLOCK
 
 

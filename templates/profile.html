@@ -9,23 +9,23 @@
 <body>
     <div class="layout-wrapper">
         <aside class="sidebar">
-            <header class="sidebar-header">MediChain</header>
+            <header class="sidebar-header">
+                <img src="{{ url_for('static', filename='images/logo/logo-transparent.png') }}" alt="Logo" class="sidebar-logo">
+                <span>MediChain</span>
+            </header>
             <nav>
-    <!-- If the user is a doctor, show their sidebar -->
-    {% if user.user_type == 'doctor' %}
-        <a href="{{ url_for('dashboard') }}"><i data-feather="grid"></i> Dashboard</a>
-        <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
-        <a href="{{ url_for('profile') }}" class="active"><i data-feather="user"></i> My Profile</a>
-    
-    <!-- Otherwise, show the patient sidebar -->
-    {% else %}
-        <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
-        <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
-        <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
-        <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
-    {% endif %}
-</nav>
-
+                <!-- Intelligent sidebar that changes based on user type -->
+                {% if user.user_type == 'doctor' %}
+                    <a href="{{ url_for('dashboard') }}"><i data-feather="grid"></i> Dashboard</a>
+                    <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+                    <a href="{{ url_for('profile') }}" class="active"><i data-feather="user"></i> My Profile</a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}"><i data-feather="home"></i> Home</a>
+                    <a href="{{ url_for('records') }}"><i data-feather="file-text"></i> Records</a>
+                    <a href="{{ url_for('my_appointments') }}"><i data-feather="calendar"></i> Appointments</a>
+                    <a href="{{ url_for('drug_guide') }}"><i data-feather="book-open"></i> Drug Guide</a>
+                {% endif %}
+            </nav>
             <div class="sidebar-footer">
                 <a href="{{ url_for('logout') }}" class="logout-btn"><i data-feather="log-out"></i> Logout</a>
             </div>
@@ -63,23 +63,28 @@
                             </select>
                         </div>
 
-                        <!-- Doctor-only Editable Field -->
-                            {% if user.user_type == 'doctor' %}
-                            <div class="form-group">
-                                <label for="specialty">Specialty</label>
-                                <select id="specialty" name="specialty">
-                                    <option value="" disabled {% if not user.specialty %}selected{% endif %}>
-                                        -- Select Your Specialty --
+                        <!-- Doctor-only Editable Fields -->
+                        {% if user.user_type == 'doctor' %}
+                        <div class="form-group">
+                            <label for="specialty">Specialty</label>
+                            <select id="specialty" name="specialty">
+                                <option value="" disabled {% if not user.specialty %}selected{% endif %}>
+                                    -- Select Your Specialty --
+                                </option>
+                                {% for s in specialties %}
+                                    <option value="{{ s }}" {% if user.specialty == s %}selected{% endif %}>
+                                        {{ s }}
                                     </option>
-                                    <!-- Loop through the specialties list from the backend -->
-                                    {% for s in specialties %}
-                                        <option value="{{ s }}" {% if user.specialty == s %}selected{% endif %}>
-                                            {{ s }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- THIS IS THE NEW LOCATION FIELD -->
+                        <div class="form-group">
+                            <label for="location">Clinic Location / Address</label>
+                            <input type="text" id="location" name="location" value="{{ user.location or '' }}" placeholder="e.g., 123 Health St, Medical City">
+                        </div>
+                        {% endif %}
 
                         <button type="submit" class="btn btn-primary" style="width: auto; margin-top: 1rem;">Save Changes</button>
                     </form>

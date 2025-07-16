@@ -1353,7 +1353,8 @@ a.user-profile:hover {
     width: 100%;
 }
 
-/* === My Appointments Page === */
+/* === ENHANCED: My Appointments Page Styling === */
+
 .appointments-header {
     display: flex;
     justify-content: space-between;
@@ -1363,7 +1364,6 @@ a.user-profile:hover {
 .appointments-header h1 { margin: 0; }
 .appointments-header .btn { width: auto; }
 
-/* The new tab navigation for Upcoming/Past */
 .appt-tabs-nav {
     display: flex;
     gap: 2rem;
@@ -1371,13 +1371,9 @@ a.user-profile:hover {
     margin-bottom: 2rem;
 }
 .appt-tab-btn {
-    background: none;
-    border: none;
-    padding: 0 0 1rem 0;
-    color: var(--text-secondary);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
+    background: none; border: none; padding: 0 0 1rem 0;
+    color: var(--text-secondary); font-size: 1rem;
+    font-weight: 600; cursor: pointer;
     border-bottom: 3px solid transparent;
 }
 .appt-tab-btn.active {
@@ -1386,10 +1382,10 @@ a.user-profile:hover {
 }
 
 .appointment-list {
-    display: none; /* Hidden by default, JS will show the active one */
+    display: none;
 }
 .appointment-list.active {
-    display: flex; /* Show the active list */
+    display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
@@ -1404,8 +1400,12 @@ a.user-profile:hover {
     border-radius: 12px;
 }
 
+/* THIS IS THE NEW STRUCTURE FOR THE TEXT CONTENT */
 .appointment-card .appt-info {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* Stacks text vertically */
+    align-items: flex-start;  /* Aligns text to the left */
 }
 
 .appointment-card .appt-date {
@@ -1423,9 +1423,16 @@ a.user-profile:hover {
 }
 .appointment-card .clinic-info {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem; /* Creates space above the button */
 }
-.appointment-card .btn-sm { padding: 0.5rem 1rem; font-size: 0.9rem; width: auto; }
+
+/* The button is now a block element inside the flex column */
+.appointment-card .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: auto;
+}
 
 .appointment-card .doctor-avatar {
     width: 120px;
@@ -1433,6 +1440,7 @@ a.user-profile:hover {
     border-radius: 12px;
     object-fit: cover;
     margin-left: 2rem;
+    flex-shrink: 0; /* Prevents avatar from shrinking */
 }
 /* --- DEFINITIVE FIX: Booking Page Styling --- */
 
@@ -2094,3 +2102,123 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 #qr-file-input {
     display: none;
 }
+.flatpickr-calendar {
+    background: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+    width: 300px !important;
+}
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    color: var(--text-primary) !important;
+    fill: var(--text-primary) !important;
+}
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+    color: var(--primary-blue) !important;
+    fill: var(--primary-blue) !important;
+}
+.flatpickr-current-month .cur-month, 
+.flatpickr-current-month .cur-year {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+.flatpickr-weekday {
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+}
+.flatpickr-day {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+}
+.flatpickr-day:hover {
+    background: var(--bg-secondary) !important;
+}
+.flatpickr-day.today {
+    border-color: var(--primary-blue) !important;
+    color: var(--primary-blue) !important;
+}
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange {
+    background: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    color: var(--white) !important;
+}
+.flatpickr-time {
+    border-top: 1px solid var(--border-primary) !important;
+}
+.flatpickr-time input, .flatpickr-time .flatpickr-am-pm {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+/* --- NEW: Appointment Detail Page Styling --- */
+
+.appointment-detail-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 16px;
+    padding: 2.5rem;
+}
+
+.appt-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+.appt-detail-header .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.appt-detail-header h2 {
+    font-size: 1.75rem;
+    margin: 0 0 0.25rem 0;
+}
+.appt-detail-header .specialty {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.appt-detail-body {
+    padding: 1.5rem 0;
+}
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.info-row i {
+    color: var(--primary-blue);
+    width: 24px;
+}
+.info-row strong {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.info-row span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.appt-detail-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+    display: flex;
+    justify-content: center;
+}
+.appt-detail-footer .btn {
+    width: auto;
+}
+

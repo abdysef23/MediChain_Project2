@@ -41,7 +41,7 @@
                             <span class="appt-date">{{ appt.appointment_time | format_datetime }}</span>
                             <h3 class="doctor-name">Dr. {{ appt.doctor.name }}</h3>
                             <span class="clinic-info">{{ appt.doctor.specialty or 'General Practice' }}</span>
-                            <a href="#" class="btn btn-secondary btn-sm">View Details</a>
+                            <a href="{{ url_for('appointment_detail', appointment_id=appt.id) }}" class="btn btn-secondary btn-sm">View Details</a>
                         </div>
                         <img class="doctor-avatar" src="{{ url_for('static', filename='images/others/female_doctor.png') if appt.doctor.gender == 'Female' else url_for('static', filename='images/others/male_doctor.png') }}" alt="Doctor Avatar">
                     </div>
@@ -58,7 +58,7 @@
                             <span class="appt-date">{{ appt.appointment_time | format_datetime }}</span>
                             <h3 class="doctor-name">Dr. {{ appt.doctor.name }}</h3>
                             <span class="clinic-info">{{ appt.doctor.specialty or 'General Practice' }}</span>
-                            <a href="#" class="btn btn-secondary btn-sm">View Details</a>
+                            <a href="{{ url_for('appointment_detail', appointment_id=appt.id) }}" class="btn btn-secondary btn-sm">View Details</a>
                         </div>
                         <img class="doctor-avatar" src="{{ url_for('static', filename='images/others/female_doctor.png') if appt.doctor.gender == 'Female' else url_for('static', filename='images/others/male_doctor.png') }}" alt="Doctor Avatar">
                     </div>
