@@ -343,3 +343,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+// --- NEW: QR Code Scanner Logic for Doctor Dashboard ---
+document.addEventListener('DOMContentLoaded', () => {
+    const scanBtn = document.getElementById('scan-qr-btn');
+    const fileInput = document.getElementById('qr-file-input');
+
+    if (!scanBtn) return; // Only run if the scan button exists
+
+    // When the floating button is clicked, trigger the hidden file input
+    scanBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // When a file (or a picture from the camera) is selected
+    fileInput.addEventListener('change', event => {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const image = new Image();
+            image.src = e.target.result;
+            image.onload = function() {
+                // Draw the image onto a temporary canvas to read its data
+                const canvas = document.createElement('canvas');
+                canvas.width = this.width;
+                canvas.height = this.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(this, 0, 0, this.width, this.height);
+                const imageData = ctx.getImageData(0, 0, this.width, this.height);
+                
+                // Try to decode a QR code from the image data
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    console.log("Found QR code:", code.data);
+                    // SUCCESS: Redirect the browser to the URL found in the QR code
+                    window.location.href = code.data;
+                } else {
+                    alert("No QR code found in the image. Please try again.");
+                }
+            };
+        };
+        reader.readAsDataURL(file);
+    });
+});
