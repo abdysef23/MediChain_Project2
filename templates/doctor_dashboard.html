@@ -33,7 +33,19 @@
                     {% if appointments %}
                         {% for appt in appointments %}
                         <div class="appointment-card">
-                            <!-- ... (appointment card content remains the same) ... -->
+                            <div class="appt-info">
+                                <span class="appt-date">{{ appt.appointment_time | format_datetime }}</span>
+                                <h3 class="doctor-name">{{ appt.patient.name }}</h3>
+                                <span class="clinic-info">Patient</span>
+                                
+                                <form action="{{ url_for('complete_appointment', appointment_id=appt.id) }}" method="POST" style="margin-top: 1rem;">
+                                    <button type="submit" class="btn btn-secondary btn-sm">
+                                        <i data-feather="check-square"></i> Mark as Complete
+                                    </button>
+                                </form>
+                            </div>
+                            <!-- Updated to use a generic avatar if gender is not set -->
+                            <img class="doctor-avatar" src="{{ url_for('static', filename='images/others/female_doctor.png') if appt.patient.gender == 'Female' else url_for('static', filename='images/others/male_doctor.png') }}" alt="Patient Avatar">
                         </div>
                         {% endfor %}
                     {% else %}
